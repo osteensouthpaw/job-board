@@ -2,7 +2,6 @@ package com.omega.jobportal.user;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
