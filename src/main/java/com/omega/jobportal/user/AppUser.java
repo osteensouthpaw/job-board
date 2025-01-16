@@ -3,9 +3,7 @@ package com.omega.jobportal.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -14,6 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "app_user")
 public class AppUser {
     @Id
@@ -25,19 +25,17 @@ public class AppUser {
 
     @Column(nullable = false, name = "last_name")
     private String lastName;
+
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
-    @Email
     private String email;
 
     private String phone;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
-
-    @Column(nullable = false, length = 1000)
-    private String bio;
 
     private String imageUrl;
 
