@@ -1,3 +1,16 @@
+spring:
+  application:
+    name: job-portal
 
-
-
+#    database configuration
+  data:
+    jdbc:
+      dialect: postgresql
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: admin@123
+    driver-class-name: org.postgresql.Driver
