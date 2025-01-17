@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @Table(name = "job_applications")
 public class JobApplication {
     @EmbeddedId
-    @Column(name = "application_id")
     private JobApplicationKey id;
 
     @Column(name = "application_date")
