@@ -50,7 +50,7 @@ public class JobPost {
 
     @Column(name = "skill_level")
     @Enumerated(EnumType.STRING)
-    private SkillLevel skillLevel;
+    private ExperienceLevel experienceLevel;
 
     @Column(name = "is_active")
     private boolean isActive = true;

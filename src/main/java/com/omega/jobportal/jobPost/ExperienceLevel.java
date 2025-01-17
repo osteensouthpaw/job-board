@@ -1,6 +1,6 @@
 package com.omega.jobportal.jobPost;
 
-public enum SkillLevel {
+public enum ExperienceLevel {
     ENTRY_LEVEL,
     JUNIOR,
     PROFESSIONAL,
