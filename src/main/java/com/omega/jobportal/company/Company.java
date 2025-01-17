@@ -1,4 +1,4 @@
-package com.omega.jobportal.recruiter;
+package com.omega.jobportal.company;
 
 
 import jakarta.persistence.*;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "recruiters")
-public class Recruiter {
+@Table(name = "companies")
+public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,5 +31,4 @@ public class Recruiter {
 
     @Column(name = "website_url")
     private String websiteUrl;
-
 }

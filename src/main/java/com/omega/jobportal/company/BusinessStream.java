@@ -1,4 +1,4 @@
-package com.omega.jobportal.recruiter;
+package com.omega.jobportal.company;
 
 import jakarta.persistence.*;
 
