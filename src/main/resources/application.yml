@@ -9,8 +9,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    open-in-view: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/job-portal
     username: postgres
     password: admin@123
     driver-class-name: org.postgresql.Driver
