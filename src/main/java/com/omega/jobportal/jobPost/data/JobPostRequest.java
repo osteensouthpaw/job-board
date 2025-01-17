@@ -1,7 +1,7 @@
 package com.omega.jobportal.jobPost.data;
 
 import com.omega.jobportal.jobPost.JobType;
-import com.omega.jobportal.jobPost.SkillLevel;
+import com.omega.jobportal.jobPost.ExperienceLevel;
 import com.omega.jobportal.jobPost.WorkMode;
 
 public record JobPostRequest(
@@ -11,6 +11,6 @@ public record JobPostRequest(
         String jobDescription,
         WorkMode workMode,
         JobType jobType,
-        SkillLevel skillLevel
+        ExperienceLevel experienceLevel
         ) {
 }
