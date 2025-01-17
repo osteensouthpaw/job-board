@@ -2,6 +2,7 @@ package com.omega.jobportal.jobPost;
 
 
 import com.omega.jobportal.company.Company;
+import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,10 @@ public class JobPost {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     @Column(name = "job_title")
     private String jobTitle;
