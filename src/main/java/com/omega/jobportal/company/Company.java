@@ -1,6 +1,7 @@
 package com.omega.jobportal.company;
 
 
+import com.omega.jobportal.location.Location;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,10 @@ public class Company {
 
     @Column(nullable = false, name = "establishment_date")
     private LocalDateTime establishmentDate;
+
+    @ManyToOne
+    @JoinColumn(name = "company_location")
+    private Location companyLocation;
 
     @Column(name = "website_url")
     private String websiteUrl;
