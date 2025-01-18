@@ -25,7 +25,7 @@ public class Company {
 
     @ManyToOne
     @JoinColumn(name = "business_stream_id")
-    private BusinessStream businessStreamId;
+    private BusinessStream businessStream;
 
     @Column(nullable = false, name = "establishment_date")
     private LocalDateTime establishmentDate;

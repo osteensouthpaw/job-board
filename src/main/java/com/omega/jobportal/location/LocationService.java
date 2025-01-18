@@ -12,4 +12,9 @@ public class LocationService {
     public Location saveLocation(Location location) {
         return locationRepository.save(location);
     }
+
+    public Location findLocationById(Long id) {
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("location does not exists"));
+    }
 }

@@ -30,4 +30,9 @@ public class UserService {
     public List<AppUser> findAll() {
        return userRepository.findAll();
     }
+
+    public AppUser findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+    }
 }
