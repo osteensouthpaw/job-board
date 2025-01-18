@@ -2,6 +2,9 @@ package com.omega.jobportal.jobPost;
 
 
 import com.omega.jobportal.company.Company;
+import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
+import com.omega.jobportal.jobPost.enumerations.JobType;
+import com.omega.jobportal.jobPost.enumerations.WorkMode;
 import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;

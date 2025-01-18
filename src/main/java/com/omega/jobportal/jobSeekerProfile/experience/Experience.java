@@ -1,7 +1,7 @@
 package com.omega.jobportal.jobSeekerProfile.experience;
 
 
-import com.omega.jobportal.jobPost.JobType;
+import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
