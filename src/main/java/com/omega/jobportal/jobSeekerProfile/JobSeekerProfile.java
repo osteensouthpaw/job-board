@@ -1,6 +1,6 @@
 package com.omega.jobportal.jobSeekerProfile;
 
-import com.omega.jobportal.jobPost.ExperienceLevel;
+import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobSeekerProfile.skills.SkillSet;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;

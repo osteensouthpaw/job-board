@@ -1,4 +1,4 @@
-package com.omega.jobportal.jobPost;
+package com.omega.jobportal.jobPost.enumerations;
 
 public enum WorkMode {
     REMOTE,
