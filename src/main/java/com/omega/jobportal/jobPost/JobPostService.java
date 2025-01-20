@@ -43,6 +43,4 @@ public class JobPostService {
                 .build();
         return jobPostDtoMapper.apply(jobPostRepository.save(jobPost));
     }
-
-
 }
