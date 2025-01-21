@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,22 +18,22 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserRegistrationRequest request) {
-        //TODO: remember to hash Password
         AppUser user = AppUser.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .gender(request.gender())
                 .imageUrl(request.imageUrl())
                 .email(request.email())
-                .password(request.password())
+                .password(passwordEncoder.encode(request.password()))
                 .build();
-       return userDtoMapper.apply(userRepository.save(user));
+        return userDtoMapper.apply(userRepository.save(user));
     }
 
     public List<AppUser> findAll() {
-       return userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public AppUser findUserById(Long id) {

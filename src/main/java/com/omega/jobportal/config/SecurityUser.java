@@ -47,4 +47,8 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public AppUser getUser() {
+        return user;
+    }
 }
