@@ -24,6 +24,7 @@ public class JobPostService {
 
     public JobPostResponse createJobPost(JobPostRequest request) {
         //get the id of the user from the session;
+        //todo: user must be a recruiter to create a jobPost;
         AppUser user = userService.findUserById(request.recruiterId());
         boolean isRecruiter = user.getUserType().equals(UserType.RECRUITER);
         if (!isRecruiter)

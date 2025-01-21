@@ -18,11 +18,4 @@ public class UserController {
     public List<AppUser> findAllUsers() {
         return userService.findAll();
     }
-
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRegistrationRequest request) {
-        return ResponseEntity.ok().body(userService.createUser(request));
-    }
-
-
 }
