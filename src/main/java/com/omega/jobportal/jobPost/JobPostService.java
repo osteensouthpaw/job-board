@@ -14,15 +14,14 @@ import com.omega.jobportal.user.UserType;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class JobPostService {
-    private static final Logger log = LoggerFactory.getLogger(JobPostService.class);
     private final JobPostRepository jobPostRepository;
     private final AuthenticationService authService;
     private final CompanyService companyService;
@@ -33,7 +32,6 @@ public class JobPostService {
     public JobPostResponse createJobPost(JobPostRequest request) {
         UserResponse authenticatedUser = authService.getSession();
         AppUser recruiter = userDtoMapper.apply(authenticatedUser);
-        log.error(recruiter.toString());
         boolean isRecruiter = recruiter.getUserType().equals(UserType.RECRUITER);
 
         if (!isRecruiter)
@@ -44,5 +42,25 @@ public class JobPostService {
 
         JobPost jobPost = new JobPost(request, recruiter, company, location);
         return jobPostDtoMapper.apply(jobPostRepository.save(jobPost));
+    }
+
+    public void deleteJobPost(Long jobPostId) {
+        UserResponse authenticatedUser = authService.getSession();
+        AppUser recruiter = userDtoMapper.apply(authenticatedUser);
+        boolean isRecruiter = recruiter.getUserType().equals(UserType.RECRUITER);
+
+        if (!isRecruiter)
+            throw new ApiException("only recruiters can delete a post", HttpStatus.BAD_REQUEST);
+
+        jobPostRepository.findById(jobPostId)
+                .ifPresentOrElse(jobPost -> {
+                    boolean isJobPostOwner = Objects.equals(jobPost.getRecruiter().getId(), recruiter.getId());
+                    if (!isJobPostOwner)
+                        throw new ApiException("only jobPost publisher are allowed to delete their posts", HttpStatus.BAD_REQUEST);
+                    jobPostRepository.deleteById(jobPostId);
+
+                }, () -> {
+                    throw new ApiException("no such job post", HttpStatus.NOT_FOUND);
+                });
     }
 }
