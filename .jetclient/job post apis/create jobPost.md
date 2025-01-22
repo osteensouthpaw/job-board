@@ -1,6 +1,27 @@
 ```toml
 name = 'create jobPost'
-method = 'GET'
+method = 'POST'
+url = 'http://localhost:8080/api/v1/job-posts'
 sortWeight = 1000000
 id = '468c231d-00f3-441b-983d-1962fddf0deb'
+
+[body]
+type = 'JSON'
+raw = '''
+{
+        "recruiterId": 6,
+        "companyId": 1,
+        "jobTitle": "Backend Developer",
+        "jobDescription": "Develop and maintain backend systems using Java and Spring Boot.",
+        "location": {
+            "countryId": "US",
+            "city": "New York",
+            "addressLine1": "123 Main Street",
+            "addressLine2": "Apt 4B",
+            "postalCode": "10001"
+        },
+        "workMode": "REMOTE",
+        "jobType": "FULL_TIME",
+        "experienceLevel": "PROFESSIONAL"
+    }'''
 ```

@@ -11,5 +11,5 @@ public record UserResponse(
         String imageUrl,
         Gender gender,
         UserType userType
-
-){}
+) {
+}

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
+    private final PasswordEncoder passwordEncoder;
+
 
     public UserResponse createUser(UserRegistrationRequest request) {
         boolean existsByEmail = userRepository.existsByEmail(request.email());
@@ -25,7 +28,7 @@ public class UserService implements UserDetailsService {
             throw new BadCredentialsException("email already exists");
 
         //todo: userType is not nullable, yet it accepts null values
-        AppUser appUser = new AppUser(request);
+        AppUser appUser = new AppUser(request, passwordEncoder.encode(request.password()));
         AppUser user = userRepository.save(appUser);
         return userDtoMapper.apply(user);
     }

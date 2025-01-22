@@ -29,6 +29,7 @@ public class UserDtoMapper implements Function<AppUser, UserResponse> {
                 .gender(response.gender())
                 .imageUrl(response.imageUrl())
                 .email(response.email())
+                .userType(response.userType())
                 .build();
     }
 }
