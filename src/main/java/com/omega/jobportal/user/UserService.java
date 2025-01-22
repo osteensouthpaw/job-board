@@ -21,7 +21,6 @@ public class UserService implements UserDetailsService {
     private final UserDtoMapper userDtoMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserResponse createUser(UserRegistrationRequest request) {
         boolean existsByEmail = userRepository.existsByEmail(request.email());
         if (existsByEmail)
@@ -33,8 +32,10 @@ public class UserService implements UserDetailsService {
         return userDtoMapper.apply(user);
     }
 
-    public List<AppUser> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userDtoMapper).toList();
     }
 
     @Override
