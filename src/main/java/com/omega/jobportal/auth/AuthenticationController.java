@@ -5,6 +5,7 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,14 +19,14 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public void login(@RequestBody AuthRequest authRequest,
+    public void login(@RequestBody @Valid AuthRequest authRequest,
                       HttpServletResponse response,
                       HttpServletRequest request) {
         authenticationService.login(authRequest, request, response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRegistrationRequest request) {
         return ResponseEntity.ok().body(userService.createUser(request));
     }
 
@@ -37,8 +38,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getSession() {
-        UserResponse loggedInUser = authenticationService.getSession();
+    public ResponseEntity<UserResponse> getSession(HttpServletRequest request) {
+        UserResponse loggedInUser = authenticationService.getSession(request);
         return ResponseEntity.ok().body(loggedInUser);
     }
 }

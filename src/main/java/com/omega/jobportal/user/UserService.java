@@ -5,6 +5,7 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,12 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserRegistrationRequest request) {
+        boolean existsByEmail = userRepository.existsByEmail(request.email());
+        if (existsByEmail)
+            throw new BadCredentialsException("email already exists");
+
+        //todo: userType is not nullable, yet it accepts null values
+
         AppUser user = AppUser.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())

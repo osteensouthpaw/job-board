@@ -1,6 +1,7 @@
 package com.omega.jobportal.auth;
 
 import com.omega.jobportal.config.SecurityUser;
+import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,11 +45,12 @@ public class AuthenticationService {
         securityContextLogoutHandler.logout(request, response, authentication);
     }
 
-    public UserResponse getSession() {
+    public UserResponse getSession(HttpServletRequest request) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof SecurityUser loggedInUser) {
             return userDtoMapper.apply(loggedInUser.getUser());
-        } else throw new IllegalStateException("no user session");
+        } else
+            throw new ApiException("authentication is required", HttpStatus.BAD_REQUEST, request.getRequestURI());
     }
 }
