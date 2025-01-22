@@ -2,6 +2,7 @@ package com.omega.jobportal.jobPost;
 
 import com.omega.jobportal.company.Company;
 import com.omega.jobportal.company.CompanyService;
+import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.dtoMapper.JobPostDtoMapper;
@@ -11,6 +12,7 @@ import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserService;
 import com.omega.jobportal.user.UserType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +30,7 @@ public class JobPostService {
         AppUser user = userService.findUserById(request.recruiterId());
         boolean isRecruiter = user.getUserType().equals(UserType.RECRUITER);
         if (!isRecruiter)
-            throw new RuntimeException("only recruiters can create job post");
+            throw new ApiException("only recruiters can create job post", HttpStatus.BAD_REQUEST);
         Company company = companyService.findCompanyById(request.companyId());
         Location location = locationService.saveLocation(request.location());
 

@@ -11,12 +11,10 @@ import java.time.LocalDateTime;
 public class ApiException extends RuntimeException {
     private HttpStatus httpStatus;
     private LocalDateTime timestamp;
-    private String path;
 
-    public ApiException(String message, HttpStatus httpStatus, String path) {
+    public ApiException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
-        this.path = path;
         this.timestamp = LocalDateTime.now();
     }
 }
