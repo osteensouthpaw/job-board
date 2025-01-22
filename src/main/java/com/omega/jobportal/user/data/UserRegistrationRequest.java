@@ -20,6 +20,7 @@ public record UserRegistrationRequest(
         @NotNull(message = "email is required")
         String email,
 
+        String phone,
         @Size(min = 8)
         String password,
         Gender gender,

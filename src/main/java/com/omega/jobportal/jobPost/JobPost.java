@@ -2,6 +2,7 @@ package com.omega.jobportal.jobPost;
 
 
 import com.omega.jobportal.company.Company;
+import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobPost.enumerations.WorkMode;
@@ -61,4 +62,15 @@ public class JobPost {
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public JobPost(JobPostRequest request, AppUser recruiter, Company company, Location location) {
+        this.recruiter = recruiter;
+        this.company = company;
+        this.location = location;
+        this.jobTitle = request.jobTitle();
+        this.description = request.jobDescription();
+        this.jobType = request.jobType();
+        this.workMode = request.workMode();
+        this.experienceLevel = request.experienceLevel();
+    }
 }

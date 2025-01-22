@@ -9,7 +9,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
-    private final PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserRegistrationRequest request) {
         boolean existsByEmail = userRepository.existsByEmail(request.email());
@@ -27,25 +25,13 @@ public class UserService implements UserDetailsService {
             throw new BadCredentialsException("email already exists");
 
         //todo: userType is not nullable, yet it accepts null values
-
-        AppUser user = AppUser.builder()
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .gender(request.gender())
-                .imageUrl(request.imageUrl())
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .build();
-        return userDtoMapper.apply(userRepository.save(user));
+        AppUser appUser = new AppUser(request);
+        AppUser user = userRepository.save(appUser);
+        return userDtoMapper.apply(user);
     }
 
     public List<AppUser> findAll() {
         return userRepository.findAll();
-    }
-
-    public AppUser findUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
     }
 
     @Override
