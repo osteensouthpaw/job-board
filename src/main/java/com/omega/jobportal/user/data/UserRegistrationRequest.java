@@ -13,6 +13,7 @@ public record UserRegistrationRequest(
         @NotNull(message = "last name is required")
         String lastName,
 
+        @NotNull(message = "userType is required")
         UserType userType,
 
         @Email
