@@ -38,8 +38,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getSession(HttpServletRequest request) {
-        UserResponse loggedInUser = authenticationService.getSession(request);
+    public ResponseEntity<UserResponse> getSession() {
+        UserResponse loggedInUser = authenticationService.getSession();
         return ResponseEntity.ok().body(loggedInUser);
     }
 }

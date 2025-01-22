@@ -7,8 +7,6 @@ import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
     private final SecurityContextLogoutHandler securityContextLogoutHandler;
@@ -45,12 +42,10 @@ public class AuthenticationService {
         securityContextLogoutHandler.logout(request, response, authentication);
     }
 
-    public UserResponse getSession(HttpServletRequest request) {
+    public UserResponse getSession() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof SecurityUser loggedInUser) {
+        if (principal instanceof SecurityUser loggedInUser)
             return userDtoMapper.apply(loggedInUser.getUser());
-        } else
-            throw new ApiException("authentication is required", HttpStatus.BAD_REQUEST, request.getRequestURI());
+        else throw new ApiException("authentication is required", HttpStatus.BAD_REQUEST);
     }
 }
