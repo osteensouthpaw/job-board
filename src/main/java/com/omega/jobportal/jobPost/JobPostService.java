@@ -14,12 +14,15 @@ import com.omega.jobportal.user.UserType;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class JobPostService {
+    private static final Logger log = LoggerFactory.getLogger(JobPostService.class);
     private final JobPostRepository jobPostRepository;
     private final AuthenticationService authService;
     private final CompanyService companyService;
@@ -30,6 +33,7 @@ public class JobPostService {
     public JobPostResponse createJobPost(JobPostRequest request) {
         UserResponse authenticatedUser = authService.getSession();
         AppUser recruiter = userDtoMapper.apply(authenticatedUser);
+        log.error(recruiter.toString());
         boolean isRecruiter = recruiter.getUserType().equals(UserType.RECRUITER);
 
         if (!isRecruiter)

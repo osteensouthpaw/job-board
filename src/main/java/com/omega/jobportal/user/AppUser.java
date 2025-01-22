@@ -5,16 +5,18 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Table(name = "app_user")
 public class AppUser {
     @Id
@@ -45,17 +47,14 @@ public class AppUser {
     @Column(nullable = false)
     private Gender gender;
 
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public AppUser(UserRegistrationRequest request) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    public AppUser(UserRegistrationRequest request, String encodedPassword) {
         this.firstName = request.firstName();
         this.lastName = request.lastName();
-        //TODO: get bean from spring context to encode this password
-        this.password = encoder.encode(request.password());
+        this.password = encodedPassword;
         this.email = request.email();
         this.userType = request.userType();
         this.imageUrl = request.imageUrl();
