@@ -1,9 +1,11 @@
 package com.omega.jobportal.user;
 
 
+import com.omega.jobportal.user.data.UserRegistrationRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -47,4 +49,17 @@ public class AppUser {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    public AppUser(UserRegistrationRequest request) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.firstName = request.firstName();
+        this.lastName = request.lastName();
+        //TODO: get bean from spring context to encode this password
+        this.password = encoder.encode(request.password());
+        this.email = request.email();
+        this.userType = request.userType();
+        this.imageUrl = request.imageUrl();
+        this.gender = request.gender();
+        this.phone = request.phone();
+    }
 }
