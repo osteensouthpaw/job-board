@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/job-posts")
@@ -21,5 +18,11 @@ public class JobPostController {
     public ResponseEntity<JobPostResponse> createJobPost(@RequestBody @Valid JobPostRequest request) {
         JobPostResponse jobPostResponse = jobPostService.createJobPost(request);
         return new ResponseEntity<>(jobPostResponse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJobPost(@PathVariable Long id) {
+        jobPostService.deleteJobPost(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
