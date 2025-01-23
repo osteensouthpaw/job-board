@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -44,6 +45,9 @@ public class JobPost {
     @Column(length = 1000)
     private String description;
 
+    @Column(nullable = false, name = "hourly_rate")
+    private BigDecimal hourlyRate;
+
     @Column(name = "job_type")
     @Enumerated(EnumType.STRING)
     private JobType jobType;
@@ -69,6 +73,7 @@ public class JobPost {
         this.location = location;
         this.jobTitle = request.jobTitle();
         this.description = request.jobDescription();
+        this.hourlyRate = request.hourlyRate();
         this.jobType = request.jobType();
         this.workMode = request.workMode();
         this.experienceLevel = request.experienceLevel();
