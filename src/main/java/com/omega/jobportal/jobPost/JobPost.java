@@ -56,12 +56,12 @@ public class JobPost {
     @Enumerated(EnumType.STRING)
     private ExperienceLevel experienceLevel;
 
-    @Column(name = "is_active")
-    private boolean isActive = true;
-
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "application_deadline")
+    private LocalDateTime applicationDeadline;
 
     public JobPost(JobPostRequest request, AppUser recruiter, Company company, Location location) {
         this.recruiter = recruiter;
@@ -72,5 +72,6 @@ public class JobPost {
         this.jobType = request.jobType();
         this.workMode = request.workMode();
         this.experienceLevel = request.experienceLevel();
+        this.applicationDeadline = request.applicationDeadline();
     }
 }
