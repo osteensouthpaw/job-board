@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,8 +31,9 @@ public class JobApplicationService {
     public JobApplicationResponse createJobApplication(JobApplicationRequest request) {
         AppUser applicant = validatedApplicant();
         var jobPost = jobPostService.findJobPostById(request.jobPostId());
+        boolean isApplicationOpen = LocalDateTime.now().isBefore(jobPost.getApplicationDeadline());
 
-        if (!jobPost.isActive())
+        if (!isApplicationOpen)
             throw new ApiException("job application closed, applications no longer accepted", HttpStatus.BAD_REQUEST);
         JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
 

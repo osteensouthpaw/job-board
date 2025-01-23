@@ -19,7 +19,8 @@ public record JobPostResponse(
         JobType jobType,
         WorkMode workMode,
         ExperienceLevel experienceLevel,
-        boolean isActive,
+        boolean isOpen,
+        LocalDateTime applicationDeadline,
         LocalDateTime createdAt
 ) {
 }
