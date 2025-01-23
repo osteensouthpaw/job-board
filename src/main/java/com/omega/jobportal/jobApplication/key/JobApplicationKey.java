@@ -6,9 +6,7 @@ import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -16,6 +14,8 @@ import java.io.Serializable;
 @Setter
 @Embeddable
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobApplicationKey implements Serializable {
 
     @ManyToOne

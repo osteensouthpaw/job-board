@@ -63,4 +63,9 @@ public class JobPostService {
                     throw new ApiException("no such job post", HttpStatus.NOT_FOUND);
                 });
     }
+
+    public JobPost findJobPostById(Long id) {
+        return jobPostRepository.findById(id)
+                .orElseThrow(() -> new ApiException("no such job post", HttpStatus.NOT_FOUND));
+    }
 }
