@@ -3,9 +3,8 @@ package com.omega.jobportal.jobPost.dtoMapper;
 import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
+import org.springframework.cglib.core.internal.Function;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 @Component
 public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
