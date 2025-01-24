@@ -2,5 +2,6 @@ package com.omega.jobportal.user;
 
 public enum UserType {
     RECRUITER,
-    JOB_SEEKER
+    JOB_SEEKER,
+    ADMIN
 }
