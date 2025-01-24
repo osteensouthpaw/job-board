@@ -32,10 +32,6 @@ public class JobPostService {
     public JobPostResponse createJobPost(JobPostRequest request) {
         UserResponse authenticatedUser = authService.getSession();
         AppUser recruiter = userDtoMapper.apply(authenticatedUser);
-        boolean isRecruiter = recruiter.getUserType().equals(UserType.RECRUITER);
-
-        if (!isRecruiter)
-            throw new ApiException("only recruiters can create job post", HttpStatus.BAD_REQUEST);
 
         Company company = companyService.findCompanyById(request.companyId());
         Location location = locationService.saveLocation(request.location());
@@ -56,7 +52,7 @@ public class JobPostService {
                 .ifPresentOrElse(jobPost -> {
                     boolean isJobPostOwner = Objects.equals(jobPost.getRecruiter().getId(), recruiter.getId());
                     if (!isJobPostOwner)
-                        throw new ApiException("only jobPost publisher are allowed to delete their posts", HttpStatus.BAD_REQUEST);
+                        throw new ApiException("only jobPost publisher are allowed to delete their posts", HttpStatus.FORBIDDEN);
                     jobPostRepository.deleteById(jobPostId);
 
                 }, () -> {

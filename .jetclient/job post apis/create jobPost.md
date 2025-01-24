@@ -22,6 +22,8 @@ raw = '''
   },
   "workMode": "REMOTE",
   "jobType": "FULL_TIME",
+  "applicationDeadline": "2025-02-24T14:30:00",
+  "hourlyRate": 20,
   "experienceLevel": "PROFESSIONAL"
 }'''
 ```
