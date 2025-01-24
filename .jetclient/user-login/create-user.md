@@ -14,8 +14,8 @@ raw = '''
 {
   "firstName": "John",
   "lastName": "Doe",
-  "userType": "RECRUITER",
-  "email": "john.doe@yahoo2.com",
+  "userType": "JOB_SEEKER",
+  "email": "john.doe@yahoo3.com",
   "password": "securePassword",
   "gender": "MALE",
   "imageUrl": "https://example.com/images/john.jpg"
