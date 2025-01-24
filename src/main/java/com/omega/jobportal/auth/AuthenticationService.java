@@ -46,6 +46,6 @@ public class AuthenticationService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof SecurityUser loggedInUser)
             return userDtoMapper.apply(loggedInUser.getUser());
-        else throw new ApiException("authentication is required", HttpStatus.BAD_REQUEST);
+        else throw new ApiException("authentication is required", HttpStatus.UNAUTHORIZED);
     }
 }
