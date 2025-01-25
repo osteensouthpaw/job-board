@@ -2,6 +2,8 @@ package com.omega.jobportal.jobPost.dtoMapper;
 
 import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
+import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
+import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.stereotype.Component;
@@ -33,5 +35,17 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
                 jobPost.getApplicationDeadline(),
                 jobPost.getCreatedAt()
         );
+    }
+
+    public JobPost apply(JobPostUpdateRequest request, JobPost jobPost, Location location) {
+        jobPost.setJobTitle(request.jobTitle());
+        jobPost.setDescription(request.jobDescription());
+        jobPost.setHourlyRate(request.hourlyRate());
+        jobPost.setApplicationDeadline(request.applicationDeadline());
+        jobPost.setExperienceLevel(request.experienceLevel());
+        jobPost.setJobType(request.jobType());
+        jobPost.setWorkMode(request.workMode());
+        jobPost.setLocation(location);
+        return jobPost;
     }
 }

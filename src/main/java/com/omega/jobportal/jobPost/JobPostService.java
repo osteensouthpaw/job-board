@@ -6,6 +6,7 @@ import com.omega.jobportal.company.CompanyService;
 import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
+import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
 import com.omega.jobportal.jobPost.dtoMapper.JobPostDtoMapper;
 import com.omega.jobportal.location.Location;
 import com.omega.jobportal.location.LocationService;
@@ -32,10 +33,8 @@ public class JobPostService {
     public JobPostResponse createJobPost(JobPostRequest request) {
         UserResponse authenticatedUser = authService.getSession();
         AppUser recruiter = userDtoMapper.apply(authenticatedUser);
-
         Company company = companyService.findCompanyById(request.companyId());
         Location location = locationService.saveLocation(request.location());
-
         JobPost jobPost = new JobPost(request, recruiter, company, location);
         return jobPostDtoMapper.apply(jobPostRepository.save(jobPost));
     }
@@ -58,6 +57,18 @@ public class JobPostService {
                 }, () -> {
                     throw new ApiException("no such job post", HttpStatus.NOT_FOUND);
                 });
+    }
+
+    public JobPostResponse updateJobPost(JobPostUpdateRequest request, Long jobPostId) {
+        UserResponse loggedInUser = authService.getSession();
+        JobPost jobPost = findJobPostById(jobPostId);
+        boolean isJobPostPublisher = Objects.equals(jobPost.getRecruiter().getId(), loggedInUser.id());
+        if (!isJobPostPublisher)
+            throw new ApiException("only jobPost owners can update a post", HttpStatus.FORBIDDEN);
+        Location location = locationService.updateLocation(jobPost.getLocation().getId(), request.location());
+        JobPost updatedJobPost = jobPostDtoMapper.apply(request, jobPost, location);
+        updatedJobPost = jobPostRepository.save(updatedJobPost);
+        return jobPostDtoMapper.apply(updatedJobPost);
     }
 
     public JobPost findJobPostById(Long id) {
