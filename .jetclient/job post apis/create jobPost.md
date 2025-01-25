@@ -1,7 +1,7 @@
 ```toml
 name = 'create jobPost'
-method = 'POST'
-url = 'http://localhost:8080/api/v1/job-posts'
+method = 'PATCH'
+url = 'http://localhost:8080/api/v1/job-posts/31'
 sortWeight = 1000000
 id = '468c231d-00f3-441b-983d-1962fddf0deb'
 
@@ -11,7 +11,7 @@ raw = '''
 {
   "recruiterId": 6,
   "companyId": 1,
-  "jobTitle": "Backend Developer",
+  "jobTitle": " Backend Developer",
   "jobDescription": "Develop and maintain backend systems using Java and Spring Boot.",
   "location": {
     "countryId": "US",
