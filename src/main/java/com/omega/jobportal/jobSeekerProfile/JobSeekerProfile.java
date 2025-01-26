@@ -1,14 +1,13 @@
 package com.omega.jobportal.jobSeekerProfile;
 
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
-import com.omega.jobportal.jobSeekerProfile.skills.SkillSet;
+import com.omega.jobportal.jobSeekerProfile.data.JobSeekerProfileRequest;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -33,23 +32,39 @@ public class JobSeekerProfile {
     @Column(length = 1000)
     private String bio;
 
+    @Column(nullable = false)
     private String profession;
 
-    @Column(name = "personal_website")
-    private String personalWebsite;
+    @Column(name = "personal_website_url")
+    private String personalWebsiteUrl;
+
+    @Column(name = "linkedin_url")
+    private String linkedInUrl;
+
+    @Column(name = "github_url")
+    private String gitHubUrl;
+
+    @Column(name = "twitter_url")
+    private String twitterUrl;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "experience_level")
+    @Column(name = "experience_level", nullable = false)
     @Enumerated(EnumType.STRING)
     private ExperienceLevel experienceLevel;
 
-    @ManyToMany
-    @JoinTable(
-            name = "job_seeker_skills",
-            joinColumns = @JoinColumn(name = "job_seeker_id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
-    private Set<SkillSet> skills;
+
+    public JobSeekerProfile(JobSeekerProfileRequest request, AppUser jobSeeker) {
+        this.jobSeeker = jobSeeker;
+        this.bio = request.bio();
+        this.profession = request.profession();
+        this.personalWebsiteUrl = request.personalWebsiteUrl();
+        this.linkedInUrl = request.linkedInUrl();
+        this.gitHubUrl = request.gitHubUrl();
+        this.twitterUrl = request.twitterUrl();
+        this.experienceLevel = request.experienceLevel();
+        this.currentAnnualSalary = request.currentAnnualSalary();
+        this.dateOfBirth = request.dateOfBirth();
+    }
 }
