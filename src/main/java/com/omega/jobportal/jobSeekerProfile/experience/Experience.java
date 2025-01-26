@@ -2,7 +2,7 @@ package com.omega.jobportal.jobSeekerProfile.experience;
 
 
 import com.omega.jobportal.jobPost.enumerations.JobType;
-import com.omega.jobportal.user.AppUser;
+import com.omega.jobportal.jobSeekerProfile.JobSeekerProfile;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,8 +22,8 @@ public class Experience {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "job_seeker_id")
-    private AppUser jobSeeker;
+    @JoinColumn(name = "job_seeker_profile_id")
+    private JobSeekerProfile jobSeeker;
 
     @Column(name = "is_current_job")
     private boolean isCurrentJob;
