@@ -10,7 +10,6 @@ import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.JobPostService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
-import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,8 +63,7 @@ public class JobApplicationService {
     }
 
     private AppUser validatedApplicant() {
-        UserResponse authenticatedUser = authenticationService.getSession();
-        AppUser applicant = userDtoMapper.apply(authenticatedUser);
+        AppUser applicant = authenticationService.getSession();
         boolean isJobSeeker = applicant.getUserType().equals(UserType.JOB_SEEKER);
         if (!isJobSeeker)
             throw new ApiException("applicant must be a job seeker", HttpStatus.BAD_REQUEST);
