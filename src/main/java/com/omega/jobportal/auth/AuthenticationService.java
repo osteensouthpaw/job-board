@@ -3,7 +3,6 @@ package com.omega.jobportal.auth;
 import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.AppUser;
-import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
     private final SecurityContextLogoutHandler securityContextLogoutHandler;
-    private final UserDtoMapper userDtoMapper;
 
     public void login(AuthRequest authRequest,
                       HttpServletRequest request,
