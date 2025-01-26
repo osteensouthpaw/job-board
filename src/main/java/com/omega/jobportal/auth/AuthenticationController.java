@@ -1,8 +1,10 @@
 package com.omega.jobportal.auth;
 
+import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserService;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
+import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final UserDtoMapper userDtoMapper;
 
     @PostMapping("/login")
     public void login(@RequestBody @Valid AuthRequest authRequest,
@@ -40,7 +43,8 @@ public class AuthenticationController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getSession() {
-        UserResponse loggedInUser = authenticationService.getSession();
-        return ResponseEntity.ok().body(loggedInUser);
+        AppUser loggedInUser = authenticationService.getSession();
+        UserResponse userResponse = userDtoMapper.apply(loggedInUser);
+        return ResponseEntity.ok().body(userResponse);
     }
 }

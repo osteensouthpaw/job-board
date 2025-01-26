@@ -12,8 +12,6 @@ import com.omega.jobportal.location.Location;
 import com.omega.jobportal.location.LocationService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
-import com.omega.jobportal.user.data.UserResponse;
-import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,11 +26,9 @@ public class JobPostService {
     private final CompanyService companyService;
     private final LocationService locationService;
     private final JobPostDtoMapper jobPostDtoMapper;
-    private final UserDtoMapper userDtoMapper;
 
     public JobPostResponse createJobPost(JobPostRequest request) {
-        UserResponse authenticatedUser = authService.getSession();
-        AppUser recruiter = userDtoMapper.apply(authenticatedUser);
+        AppUser recruiter = authService.getSession();
         Company company = companyService.findCompanyById(request.companyId());
         Location location = locationService.saveLocation(request.location());
         JobPost jobPost = new JobPost(request, recruiter, company, location);
@@ -40,8 +36,7 @@ public class JobPostService {
     }
 
     public void deleteJobPost(Long jobPostId) {
-        UserResponse authenticatedUser = authService.getSession();
-        AppUser recruiter = userDtoMapper.apply(authenticatedUser);
+        AppUser recruiter = authService.getSession();
         boolean isRecruiter = recruiter.getUserType().equals(UserType.RECRUITER);
 
         if (!isRecruiter)
@@ -53,18 +48,19 @@ public class JobPostService {
                     if (!isJobPostOwner)
                         throw new ApiException("only jobPost publisher are allowed to delete their posts", HttpStatus.FORBIDDEN);
                     jobPostRepository.deleteById(jobPostId);
-
                 }, () -> {
                     throw new ApiException("no such job post", HttpStatus.NOT_FOUND);
                 });
     }
 
     public JobPostResponse updateJobPost(JobPostUpdateRequest request, Long jobPostId) {
-        UserResponse loggedInUser = authService.getSession();
+        AppUser loggedInUser = authService.getSession();
         JobPost jobPost = findJobPostById(jobPostId);
-        boolean isJobPostPublisher = Objects.equals(jobPost.getRecruiter().getId(), loggedInUser.id());
+        boolean isJobPostPublisher = Objects.equals(jobPost.getRecruiter().getId(), loggedInUser.getId());
+
         if (!isJobPostPublisher)
             throw new ApiException("only jobPost owners can update a post", HttpStatus.FORBIDDEN);
+
         Location location = locationService.updateLocation(jobPost.getLocation().getId(), request.location());
         JobPost updatedJobPost = jobPostDtoMapper.apply(request, jobPost, location);
         updatedJobPost = jobPostRepository.save(updatedJobPost);

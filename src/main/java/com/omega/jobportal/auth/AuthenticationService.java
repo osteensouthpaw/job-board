@@ -2,7 +2,7 @@ package com.omega.jobportal.auth;
 
 import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.exception.ApiException;
-import com.omega.jobportal.user.data.UserResponse;
+import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,10 +42,10 @@ public class AuthenticationService {
         securityContextLogoutHandler.logout(request, response, authentication);
     }
 
-    public UserResponse getSession() {
+    public AppUser getSession() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof SecurityUser loggedInUser)
-            return userDtoMapper.apply(loggedInUser.getUser());
+            return loggedInUser.getUser();
         else throw new ApiException("authentication is required", HttpStatus.UNAUTHORIZED);
     }
 }
