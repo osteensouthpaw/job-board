@@ -10,7 +10,6 @@ import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.JobPostService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
-import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.List;
 public class JobApplicationService {
     private final JobApplicationRepository jobApplicationRepository;
     private final AuthenticationService authenticationService;
-    private final UserDtoMapper userDtoMapper;
     private final JobPostService jobPostService;
     private final JobApplicationDtoMapper jobApplicationDtoMapper;
 
