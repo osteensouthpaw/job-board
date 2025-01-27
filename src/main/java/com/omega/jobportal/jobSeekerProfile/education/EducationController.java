@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/job-seeker/education")
@@ -24,5 +26,11 @@ public class EducationController {
     public ResponseEntity<Void> DeleteEducation(@PathVariable Long id) {
         educationService.deleteEducation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<EducationResponse>> viewEducationDetails(@PathVariable Long id) {
+        List<EducationResponse> educationResponses = educationService.viewEducationDetails(id);
+        return new ResponseEntity<>(educationResponses, HttpStatus.OK);
     }
 }

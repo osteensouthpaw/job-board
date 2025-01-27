@@ -12,7 +12,7 @@ type = 'NO_AUTH'
 type = 'JSON'
 raw = '''
 {
-  "email": "john.doe@hello1.com",
+  "email": "john.doe@hello3.com",
   "password": "securePassword"
 }'''
 ```
