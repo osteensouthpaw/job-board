@@ -50,4 +50,21 @@ public class EducationService {
                 .stream().map(educationDtoMapper)
                 .toList();
     }
+
+    public EducationResponse editEducationDetail(EducationRequest request, Long educationDetailId) {
+        AppUser loggedInUser = authenticationService.getSession();
+        return educationRepository.findById(educationDetailId)
+                .map(education -> {
+                    boolean isEducationOwner = Objects.equals(
+                            loggedInUser.getId(),
+                            education.getJobSeekerProfile().getJobSeeker().getId()
+                    );
+                    if (!isEducationOwner)
+                        throw new ApiException("you are not education owner", HttpStatus.FORBIDDEN);
+                    Education updatedEducation = educationDtoMapper.apply(request, education);
+                    Education savedUpdatedEducation = educationRepository.save(updatedEducation);
+                    return educationDtoMapper.apply(savedUpdatedEducation);
+                })
+                .orElseThrow(() -> new ApiException("Education detail not found", HttpStatus.NOT_FOUND));
+    }
 }

@@ -33,4 +33,10 @@ public class EducationController {
         List<EducationResponse> educationResponses = educationService.viewEducationDetails(id);
         return new ResponseEntity<>(educationResponses, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<EducationResponse> updateEducation(@RequestBody @Valid EducationRequest request, @PathVariable Long id) {
+        EducationResponse educationResponse = educationService.editEducationDetail(request, id);
+        return new ResponseEntity<>(educationResponse, HttpStatus.OK);
+    }
 }
