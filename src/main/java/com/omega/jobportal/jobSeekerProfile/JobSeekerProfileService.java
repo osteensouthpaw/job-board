@@ -41,4 +41,9 @@ public class JobSeekerProfileService {
                 })
                 .orElseThrow(() -> new ApiException("user profile not found", HttpStatus.NOT_FOUND));
     }
+
+    public JobSeekerProfile findJobSeekerProfileByJobSeekerId(Long id) {
+        return jobSeekerProfileRepository.findJobSeekerProfileByJobSeekerId(id)
+                .orElseThrow(() -> new ApiException("user profile not found", HttpStatus.NOT_FOUND));
+    }
 }
