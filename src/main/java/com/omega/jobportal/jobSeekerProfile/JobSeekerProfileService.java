@@ -30,4 +30,15 @@ public class JobSeekerProfileService {
                 .map(jobSeekerProfileDtoMapper)
                 .orElseThrow(() -> new ApiException("user profile not found", HttpStatus.NOT_FOUND));
     }
+
+    public JobSeekerProfileResponse updateJobSeekerProfile(JobSeekerProfileRequest request) {
+        AppUser loggedInUser = authenticationService.getSession();
+        return jobSeekerProfileRepository.findJobSeekerProfileByJobSeekerId(loggedInUser.getId())
+                .map(profile -> {
+                    JobSeekerProfile updatedProfile = jobSeekerProfileDtoMapper.apply(request, profile);
+                    updatedProfile = jobSeekerProfileRepository.save(updatedProfile);
+                    return jobSeekerProfileDtoMapper.apply(updatedProfile);
+                })
+                .orElseThrow(() -> new ApiException("user profile not found", HttpStatus.NOT_FOUND));
+    }
 }
