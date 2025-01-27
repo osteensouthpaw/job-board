@@ -1,6 +1,7 @@
 package com.omega.jobportal.jobSeekerProfile.education;
 
 import com.omega.jobportal.jobSeekerProfile.JobSeekerProfile;
+import com.omega.jobportal.jobSeekerProfile.data.EducationRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,8 @@ public class Education {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "job_seeker_id")
-    private JobSeekerProfile jobSeeker;
+    @JoinColumn(name = "job_seeker_profile_id")
+    private JobSeekerProfile jobSeekerProfile;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "education_level")
@@ -29,6 +30,7 @@ public class Education {
     @Column(name = "field_of_study")
     private String fieldOfStudy;
 
+    @Column(nullable = false)
     private String institution;
 
     @Column(name = "start_date")
@@ -39,4 +41,14 @@ public class Education {
 
     @Column(name = "certificate_url")
     private String certificateUrl;
+
+    public Education(EducationRequest request, JobSeekerProfile jobSeekerProfile) {
+        this.jobSeekerProfile = jobSeekerProfile;
+        this.educationLevel = request.educationLevel();
+        this.fieldOfStudy = request.fieldOfStudy();
+        this.institution = request.institution();
+        this.startDate = request.startDate();
+        this.endDate = request.endDate();
+        this.certificateUrl = request.certificateUrl();
+    }
 }
