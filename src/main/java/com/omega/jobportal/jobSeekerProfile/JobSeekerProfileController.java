@@ -25,4 +25,10 @@ public class JobSeekerProfileController {
         var jobSeekerProfileResponse = jobSeekerProfileService.viewJobSeekerProfile();
         return new ResponseEntity<>(jobSeekerProfileResponse, HttpStatus.OK);
     }
+
+    @PatchMapping("/me")
+    public ResponseEntity<JobSeekerProfileResponse> updateProfile(@RequestBody @Valid JobSeekerProfileRequest request) {
+        var jobSeekerProfileResponse = jobSeekerProfileService.updateJobSeekerProfile(request);
+        return new ResponseEntity<>(jobSeekerProfileResponse, HttpStatus.OK);
+    }
 }
