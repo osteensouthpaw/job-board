@@ -23,6 +23,5 @@ public class JobSeekerProfileDtoMapper implements Function<JobSeekerProfile, Job
                 jobSeekerProfile.getDateOfBirth(),
                 jobSeekerProfile.getExperienceLevel()
         );
-
     }
 }

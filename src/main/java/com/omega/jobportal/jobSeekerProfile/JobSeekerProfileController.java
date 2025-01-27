@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/job-seeker")
@@ -19,7 +16,13 @@ public class JobSeekerProfileController {
 
     @PostMapping
     public ResponseEntity<JobSeekerProfileResponse> createJobSeekerProfile(@RequestBody @Valid JobSeekerProfileRequest request) {
-        JobSeekerProfileResponse profile = jobSeekerProfileService.createProfile(request);
+        var profile = jobSeekerProfileService.createProfile(request);
         return new ResponseEntity<>(profile, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<JobSeekerProfileResponse> viewProfile() {
+        var jobSeekerProfileResponse = jobSeekerProfileService.viewJobSeekerProfile();
+        return new ResponseEntity<>(jobSeekerProfileResponse, HttpStatus.OK);
     }
 }
