@@ -52,4 +52,15 @@ public class ExperienceService {
                 .map(experienceDtoMapper)
                 .toList();
     }
+
+    public void deleteExperience(Long id) {
+        AppUser loggedInUser = authenticationService.getSession();
+        experienceRepository.findById(id)
+                .ifPresent(experience -> {
+                    boolean isExperienceOwner = Objects.equals(experience.getJobSeekerProfile().getJobSeeker().getId(), loggedInUser.getId());
+                    if (!isExperienceOwner)
+                        throw new ApiException("you can only delete your own experience", HttpStatus.FORBIDDEN);
+                    experienceRepository.delete(experience);
+                });
+    }
 }
