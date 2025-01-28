@@ -12,6 +12,7 @@ public class ExperienceDtoMapper implements Function<Experience, ExperienceRespo
     @Override
     public ExperienceResponse apply(Experience experience) {
         return new ExperienceResponse(
+                experience.getId(),
                 experience.isCurrentJob(),
                 experience.getJobType(),
                 experience.getJobTitle(),

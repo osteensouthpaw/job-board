@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/job-seeker/experiences")
@@ -24,5 +26,11 @@ public class ExperienceController {
     public ResponseEntity<ExperienceResponse> updateExperience(@RequestBody @Valid ExperienceRequest request, @PathVariable Long id) {
         ExperienceResponse experienceResponse = experienceService.updateExperience(request, id);
         return new ResponseEntity<>(experienceResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<ExperienceResponse>> viewExperiences(@PathVariable Long id) {
+        List<ExperienceResponse> experienceResponses = experienceService.viewExperiences(id);
+        return new ResponseEntity<>(experienceResponses, HttpStatus.OK);
     }
 }
