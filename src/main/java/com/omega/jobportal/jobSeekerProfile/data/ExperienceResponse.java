@@ -5,6 +5,7 @@ import com.omega.jobportal.jobPost.enumerations.JobType;
 import java.time.LocalDate;
 
 public record ExperienceResponse(
+        Long id,
         boolean isCurrentJob,
         JobType jobType,
         String jobTitle,
