@@ -24,7 +24,7 @@ public class Experience {
 
     @ManyToOne
     @JoinColumn(name = "job_seeker_profile_id")
-    private JobSeekerProfile jobSeeker;
+    private JobSeekerProfile jobSeekerProfile;
 
     @Column(name = "is_current_job")
     private boolean isCurrentJob;
@@ -60,6 +60,6 @@ public class Experience {
         this.companyName = request.companyName();
         this.description = request.description();
         this.jobLocation = request.jobLocation();
-        this.jobSeeker = jobSeekerProfile;
+        this.jobSeekerProfile = jobSeekerProfile;
     }
 }
