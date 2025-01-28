@@ -3,6 +3,7 @@ package com.omega.jobportal.jobSeekerProfile.experience;
 
 import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobSeekerProfile.JobSeekerProfile;
+import com.omega.jobportal.jobSeekerProfile.data.ExperienceRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,4 +50,16 @@ public class Experience {
 
     @Column(length = 1000)
     private String description;
+
+    public Experience(ExperienceRequest request, JobSeekerProfile jobSeekerProfile) {
+        this.isCurrentJob = request.isCurrentJob();
+        this.startDate = request.startDate();
+        this.jobType = request.jobType();
+        this.endDate = request.endDate();
+        this.jobTitle = request.jobTitle();
+        this.companyName = request.companyName();
+        this.description = request.description();
+        this.jobLocation = request.jobLocation();
+        this.jobSeeker = jobSeekerProfile;
+    }
 }
