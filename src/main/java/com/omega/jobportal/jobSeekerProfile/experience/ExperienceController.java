@@ -33,4 +33,10 @@ public class ExperienceController {
         List<ExperienceResponse> experienceResponses = experienceService.viewExperiences(id);
         return new ResponseEntity<>(experienceResponses, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExperience(@PathVariable Long id) {
+        experienceService.deleteExperience(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
