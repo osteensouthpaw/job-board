@@ -41,4 +41,17 @@ public class SkillSetService {
                     return skillSetDtoMapper.apply(updatedSkillSet);
                 }).orElseThrow(() -> new ApiException("skill set not found", HttpStatus.NOT_FOUND));
     }
+
+    public void deleteSkillSet(Long skillSetId) {
+        AppUser loggedInUser = authenticationService.getSession();
+        JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(loggedInUser.getId());
+        skillSetRepository.findById(skillSetId)
+                .ifPresentOrElse(skillSet -> {
+                    boolean isSkillSetOwner = skillSet.getJobSeekerProfile().getJobSeeker().getId().equals(jobSeekerProfile.getJobSeeker().getId());
+                    if (!isSkillSetOwner) throw new ApiException("you are not skill set owner", HttpStatus.FORBIDDEN);
+                    skillSetRepository.delete(skillSet);
+                }, () -> {
+                    throw new ApiException("skill set not found", HttpStatus.NOT_FOUND);
+                });
+    }
 }
