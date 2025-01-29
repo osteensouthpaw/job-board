@@ -3,6 +3,7 @@ package com.omega.jobportal.jobSeekerProfile.skills;
 import com.omega.jobportal.jobSeekerProfile.data.SkillSetRequest;
 import com.omega.jobportal.jobSeekerProfile.data.SkillSetResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,5 +23,11 @@ public class SkillSetController {
     public ResponseEntity<SkillSetResponse> updateSkillSet(@RequestBody SkillSetRequest request, @PathVariable Long id) {
         SkillSetResponse skillSetResponse = skillSetService.updateSkillSet(request, id);
         return ResponseEntity.ok(skillSetResponse);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteSkillSet(@PathVariable Long id) {
+        skillSetService.deleteSkillSet(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
