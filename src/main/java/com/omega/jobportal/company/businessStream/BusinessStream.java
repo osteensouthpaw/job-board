@@ -1,4 +1,4 @@
-package com.omega.jobportal.company;
+package com.omega.jobportal.company.businessStream;
 
 import jakarta.persistence.*;
 import lombok.Getter;

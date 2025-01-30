@@ -1,16 +1,20 @@
 package com.omega.jobportal.company;
 
 
+import com.omega.jobportal.company.businessStream.BusinessStream;
+import com.omega.jobportal.company.data.CompanyRegistrationRequest;
 import com.omega.jobportal.location.Location;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "companies")
 public class Company {
     @Id
@@ -28,7 +32,7 @@ public class Company {
     private BusinessStream businessStream;
 
     @Column(nullable = false, name = "establishment_date")
-    private LocalDateTime establishmentDate;
+    private LocalDate establishmentDate;
 
     @ManyToOne
     @JoinColumn(name = "company_location")
@@ -36,4 +40,14 @@ public class Company {
 
     @Column(name = "website_url")
     private String websiteUrl;
+
+
+    public Company(CompanyRegistrationRequest request, Location location, BusinessStream businessStream) {
+        this.websiteUrl = request.websiteUrl();
+        this.companyLocation = location;
+        this.establishmentDate = request.establishmentDate();
+        this.description = request.description();
+        this.companyName = request.companyName();
+        this.businessStream = businessStream;
+    }
 }
