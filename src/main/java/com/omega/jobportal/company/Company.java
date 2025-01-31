@@ -47,12 +47,13 @@ public class Company {
     private String websiteUrl;
 
 
-    public Company(CompanyRegistrationRequest request, Location location, BusinessStream businessStream) {
+    public Company(CompanyRegistrationRequest request, Location location, BusinessStream businessStream, AppUser recruiter) {
         this.websiteUrl = request.websiteUrl();
         this.companyLocation = location;
         this.establishmentDate = request.establishmentDate();
         this.description = request.description();
         this.companyName = request.companyName();
         this.businessStream = businessStream;
+        this.recruiter = recruiter;
     }
 }
