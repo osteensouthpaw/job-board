@@ -25,6 +25,14 @@ public class CompanyService {
         return companyDtoMapper.apply(company);
     }
 
+    public CompanyResponse updateCompany(CompanyRegistrationRequest request, Long companyId) {
+        Company company = findCompanyById(companyId);
+        Location location = locationService.updateLocation(company.getCompanyLocation().getId(), request.companyLocation());
+        BusinessStream businessStream = businessStreamService.findById(request.businessStream());
+        company = companyDtoMapper.apply(request, company, location, businessStream);
+        return companyDtoMapper.apply(companyRepository.save(company));
+    }
+
     public Company findCompanyById(Long id) {
         return companyRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Company not found"));
