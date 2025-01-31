@@ -4,6 +4,7 @@ package com.omega.jobportal.company;
 import com.omega.jobportal.company.businessStream.BusinessStream;
 import com.omega.jobportal.company.data.CompanyRegistrationRequest;
 import com.omega.jobportal.location.Location;
+import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,10 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "recruiter_id")
+    private AppUser recruiter;
 
     @Column(nullable = false, name = "company_name")
     private String companyName;
