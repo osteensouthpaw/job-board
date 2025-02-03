@@ -64,7 +64,7 @@ public class JobApplicationService {
         AppUser applicant = authenticationService.getSession();
         boolean isJobSeeker = applicant.getUserType().equals(UserType.JOB_SEEKER);
         if (!isJobSeeker)
-            throw new ApiException("applicant must be a job seeker", HttpStatus.BAD_REQUEST);
+            throw new ApiException("applicant must be a job seeker", HttpStatus.FORBIDDEN);
         return applicant;
     }
 }

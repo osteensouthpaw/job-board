@@ -20,6 +20,16 @@ public class JobApplication {
     @EmbeddedId
     private JobApplicationKey id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "application_status", nullable = false)
+    private ApplicationStatus applicationStatus;
+
+    @Column(name = "resume_url")
+    private String resumeUrl;
+
+    @Column(name = "cover_letter", length = 1000)
+    private String coverLetter;
+
     @Column(name = "application_date")
     @CreatedDate
     private LocalDateTime applicationDate;
