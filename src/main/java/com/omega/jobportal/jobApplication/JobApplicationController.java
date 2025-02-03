@@ -40,4 +40,10 @@ public class JobApplicationController {
         var jobPostApplicationsByJobPostId = recruiterApplicationService.findJobPostApplicationsByJobPostId(id);
         return ResponseEntity.ok(jobPostApplicationsByJobPostId);
     }
+
+    @PatchMapping("/accept")
+    public ResponseEntity<Void> acceptApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
+        recruiterApplicationService.acceptApplication(applicantId, jobPostId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
