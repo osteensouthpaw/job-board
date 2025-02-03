@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("api/v1/job-applications")
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
-    private final RecruiterApplicationService recruiterApplicationService;
 
     @GetMapping
     public ResponseEntity<List<JobApplicationResponse>> getAllJobApplications() {
@@ -37,19 +36,19 @@ public class JobApplicationController {
 
     @GetMapping("{id}")
     public ResponseEntity<List<JobApplicationResponse>> jobApplicationsByPostId(@PathVariable Long id) {
-        var jobPostApplicationsByJobPostId = recruiterApplicationService.findJobPostApplicationsByJobPostId(id);
+        var jobPostApplicationsByJobPostId = jobApplicationService.findJobPostApplicationsByJobPostId(id);
         return ResponseEntity.ok(jobPostApplicationsByJobPostId);
     }
 
     @PatchMapping("/accept")
     public ResponseEntity<Void> acceptApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
-        recruiterApplicationService.acceptApplication(applicantId, jobPostId);
+        jobApplicationService.acceptApplication(applicantId, jobPostId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/reject")
     public ResponseEntity<Void> rejectApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
-        recruiterApplicationService.rejectApplication(applicantId, jobPostId);
+        jobApplicationService.rejectApplication(applicantId, jobPostId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
