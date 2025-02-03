@@ -46,4 +46,10 @@ public class JobApplicationController {
         recruiterApplicationService.acceptApplication(applicantId, jobPostId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PatchMapping("/reject")
+    public ResponseEntity<Void> rejectApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
+        recruiterApplicationService.rejectApplication(applicantId, jobPostId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
