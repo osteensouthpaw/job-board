@@ -45,4 +45,18 @@ public class RecruiterApplicationService {
                     throw new ApiException("Job application not found", HttpStatus.NOT_FOUND);
                 });
     }
+
+    public void rejectApplication(Long jobPostId, Long applicantId) {
+        AppUser applicant = userService.findUserById(applicantId);
+        JobPost jobPost = jobPostService.findJobPostById(jobPostId);
+        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
+        jobApplicationRepository.findById(jobApplicationKey)
+                .ifPresentOrElse(application -> {
+                    application.setApplicationStatus(ApplicationStatus.REJECTED);
+                    jobApplicationRepository.save(application);
+                    //todo: send confirmation email
+                }, () -> {
+                    throw new ApiException("Job application not found", HttpStatus.NOT_FOUND);
+                });
+    }
 }
