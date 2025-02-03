@@ -20,6 +20,9 @@ public class JobApplicationDtoMapper implements Function<JobApplication, JobAppl
         return new JobApplicationResponse(
                 userDtoMapper.apply(application.getId().getApplicant()),
                 jobPostDtoMapper.apply(application.getId().getJobPost()),
+                application.getApplicationStatus(),
+                application.getResumeUrl(),
+                application.getCoverLetter(),
                 application.getApplicationDate());
     }
 }
