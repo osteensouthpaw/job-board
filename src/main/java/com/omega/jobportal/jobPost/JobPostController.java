@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/job-posts")
 @RequiredArgsConstructor
@@ -19,6 +21,18 @@ public class JobPostController {
     public ResponseEntity<JobPostResponse> createJobPost(@RequestBody @Valid JobPostRequest request) {
         JobPostResponse jobPostResponse = jobPostService.createJobPost(request);
         return new ResponseEntity<>(jobPostResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<JobPostResponse>> findAllJobs() {
+        List<JobPostResponse> jobPosts = jobPostService.findAllJobs();
+        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobPostResponse> findById(@PathVariable Long id) {
+        JobPostResponse jobPost = jobPostService.findJobById(id);
+        return new ResponseEntity<>(jobPost, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

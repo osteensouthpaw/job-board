@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -70,5 +71,16 @@ public class JobPostService {
     public JobPost findJobPostById(Long id) {
         return jobPostRepository.findById(id)
                 .orElseThrow(() -> new ApiException("no such job post", HttpStatus.NOT_FOUND));
+    }
+
+    public List<JobPostResponse> findAllJobs() {
+        return jobPostRepository
+                .findAll()
+                .stream().map(jobPostDtoMapper)
+                .toList();
+    }
+
+    public JobPostResponse findJobById(Long id) {
+        return jobPostDtoMapper.apply(findJobPostById(id));
     }
 }
