@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("api/v1/job-applications")
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
+    private final RecruiterApplicationService recruiterApplicationService;
 
     @GetMapping
     public ResponseEntity<List<JobApplicationResponse>> getAllJobApplications() {
@@ -32,5 +33,11 @@ public class JobApplicationController {
     public ResponseEntity<Void> deleteJobApplication(@PathVariable Long id) {
         jobApplicationService.deleteJobApplication(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<List<JobApplicationResponse>> jobApplicationsByPostId(@PathVariable Long id) {
+        var jobPostApplicationsByJobPostId = recruiterApplicationService.findJobPostApplicationsByJobPostId(id);
+        return ResponseEntity.ok(jobPostApplicationsByJobPostId);
     }
 }

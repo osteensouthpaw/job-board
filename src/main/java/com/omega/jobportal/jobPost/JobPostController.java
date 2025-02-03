@@ -1,6 +1,5 @@
 package com.omega.jobportal.jobPost;
 
-import com.omega.jobportal.jobApplication.data.JobApplicationResponse;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
@@ -9,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/job-posts")
@@ -34,11 +31,5 @@ public class JobPostController {
     public ResponseEntity<Void> deleteJobPost(@PathVariable Long id) {
         jobPostService.deleteJobPost(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("applications/{id}")
-    public ResponseEntity<List<JobApplicationResponse>> jobApplicationsByPostId(@PathVariable Long id) {
-        var jobPostApplicationsByJobPostId = jobPostService.findJobPostApplicationsByJobPostId(id);
-        return ResponseEntity.ok(jobPostApplicationsByJobPostId);
     }
 }
