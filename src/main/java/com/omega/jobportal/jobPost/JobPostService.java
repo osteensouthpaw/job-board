@@ -4,8 +4,6 @@ import com.omega.jobportal.auth.AuthenticationService;
 import com.omega.jobportal.company.Company;
 import com.omega.jobportal.company.CompanyService;
 import com.omega.jobportal.exception.ApiException;
-import com.omega.jobportal.jobApplication.data.JobApplicationResponse;
-import com.omega.jobportal.jobApplication.dtoMapper.JobApplicationDtoMapper;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
@@ -18,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -29,7 +26,6 @@ public class JobPostService {
     private final CompanyService companyService;
     private final LocationService locationService;
     private final JobPostDtoMapper jobPostDtoMapper;
-    private final JobApplicationDtoMapper jobApplicationDtoMapper;
 
     public JobPostResponse createJobPost(JobPostRequest request) {
         AppUser recruiter = authService.getSession();
@@ -74,13 +70,5 @@ public class JobPostService {
     public JobPost findJobPostById(Long id) {
         return jobPostRepository.findById(id)
                 .orElseThrow(() -> new ApiException("no such job post", HttpStatus.NOT_FOUND));
-    }
-
-    public List<JobApplicationResponse> findJobPostApplicationsByJobPostId(Long jobPostId) {
-        AppUser loggedInUser = authService.getSession();
-        return jobPostRepository
-                .findJobPostApplicationsById(jobPostId, loggedInUser.getId())
-                .stream().map(jobApplicationDtoMapper)
-                .toList();
     }
 }
