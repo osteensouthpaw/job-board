@@ -1,10 +1,12 @@
 package com.omega.jobportal.user;
 
 import com.omega.jobportal.config.SecurityUser;
+import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,6 +38,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll()
                 .stream()
                 .map(userDtoMapper).toList();
+    }
+
+    public AppUser findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
