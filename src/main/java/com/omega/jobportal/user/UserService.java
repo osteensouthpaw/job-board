@@ -5,6 +5,7 @@ import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
+import com.omega.jobportal.user.verificationCode.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,15 +23,18 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationCodeService verificationCodeService;
 
     public UserResponse createUser(UserRegistrationRequest request) {
         boolean existsByEmail = userRepository.existsByEmail(request.email());
         if (existsByEmail)
             throw new BadCredentialsException("email already exists");
 
-        //todo: userType is not nullable, yet it accepts null values
         AppUser appUser = new AppUser(request, passwordEncoder.encode(request.password()));
         AppUser user = userRepository.save(appUser);
+        String verificationCode = verificationCodeService.createVerificationCode(user);
+        //todo: Send verification token via email
+        //todo: verify token from email
         return userDtoMapper.apply(user);
     }
 
