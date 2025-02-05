@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface VerificationCodeRepository extends JpaRepository<VerificationCode, String> {
+public interface VerificationCodeRepository extends JpaRepository<VerificationCode, Long> {
     @Query("""
             SELECT vc FROM VerificationCode vc WHERE vc.code = :code
             """)

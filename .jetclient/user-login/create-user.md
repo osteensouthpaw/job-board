@@ -15,7 +15,7 @@ raw = '''
   "firstName": "John",
   "lastName": "Doe",
   "userType": "JOB_SEEKER",
-  "email": "john.doe@yahoo3.com",
+  "email": "osteenomega27@gmail.com",
   "password": "securePassword",
   "gender": "MALE",
   "imageUrl": "https://example.com/images/john.jpg"

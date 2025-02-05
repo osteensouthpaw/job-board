@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class VerificationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private String code;
 
     @OneToOne

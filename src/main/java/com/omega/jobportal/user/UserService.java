@@ -1,6 +1,7 @@
 package com.omega.jobportal.user;
 
 import com.omega.jobportal.config.SecurityUser;
+import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +26,9 @@ public class UserService implements UserDetailsService {
     private final UserDtoMapper userDtoMapper;
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
+    private final EmailService emailService;
 
+    @Transactional
     public UserResponse createUser(UserRegistrationRequest request) {
         boolean existsByEmail = userRepository.existsByEmail(request.email());
         if (existsByEmail)
@@ -32,10 +36,14 @@ public class UserService implements UserDetailsService {
 
         AppUser appUser = new AppUser(request, passwordEncoder.encode(request.password()));
         AppUser user = userRepository.save(appUser);
-        String verificationCode = verificationCodeService.createVerificationCode(user);
-        //todo: Send verification token via email
-        //todo: verify token from email
+        sendVerificationEmail(user);
         return userDtoMapper.apply(user);
+    }
+
+    private void sendVerificationEmail(AppUser user) {
+        String verificationCode = verificationCodeService.createVerificationCode(user);
+        System.out.println("sending verification email...");
+        emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), verificationCode);
     }
 
     public List<UserResponse> findAll() {
