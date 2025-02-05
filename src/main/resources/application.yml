@@ -15,6 +15,29 @@ spring:
     username: postgres
     password: admin@123
     driver-class-name: org.postgresql.Driver
+
+  #    email configuration settings
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: osteenomega2@gmail.com
+    password: yeyzzrxubrgjljmu
+    default-encoding: utf-8
+    properties:
+      smtp:
+        ssl:
+          trust: smtp.gmail.com
+        writetimeout: 10000
+        connectiontimeout: 10000
+        timeout: 10000
+        auth: true
+        starttls.enable: true
+        required: true
+      mail:
+        debug:
+
+#      logging configurations
 logging:
   level:
     web: debug
+

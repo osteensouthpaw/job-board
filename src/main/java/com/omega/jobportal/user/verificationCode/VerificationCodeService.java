@@ -1,8 +1,10 @@
 package com.omega.jobportal.user.verificationCode;
 
+import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.AppUser;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,9 +22,11 @@ public class VerificationCodeService {
         return verificationCodeRepository.save(verificationCode).getCode();
     }
 
-    public boolean verifyCode(String code) {
-        return verificationCodeRepository.findByCode(code)
-                .filter(verificationCode -> verificationCode.getCode().equals(code))
-                .isPresent();
+    public void verifyCode(String code) {
+        verificationCodeRepository.findByCode(code)
+                .ifPresentOrElse(verificationCode -> verificationCodeRepository.deleteById(verificationCode.getId()),
+                        () -> {
+                            throw new ApiException("please activate your account to continue", HttpStatus.UNAUTHORIZED);
+                        });
     }
 }
