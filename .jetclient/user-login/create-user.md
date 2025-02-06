@@ -1,9 +1,13 @@
 ```toml
 name = 'create-user'
-method = 'POST'
-url = 'http://localhost:8080/api/v1/auth/register'
+method = 'GET'
+url = 'http://localhost:8080/api/v1/users/verify-email?token=722079'
 sortWeight = 1000000
 id = '994da0e1-5426-4d92-96b0-8be9f573182e'
+
+[[queryParams]]
+key = 'token'
+value = '722079'
 
 [auth]
 type = 'NO_AUTH'
