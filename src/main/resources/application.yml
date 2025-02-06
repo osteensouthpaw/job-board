@@ -40,4 +40,3 @@ spring:
 logging:
   level:
     web: debug
-

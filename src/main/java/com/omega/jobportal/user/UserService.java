@@ -2,6 +2,7 @@ package com.omega.jobportal.user;
 
 import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.email.EmailService;
+import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
@@ -42,8 +43,8 @@ public class UserService implements UserDetailsService {
 
     private void sendVerificationEmail(AppUser user) {
         String verificationCode = verificationCodeService.createVerificationCode(user);
-        System.out.println("sending verification email...");
-        emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), verificationCode);
+        String message = EmailUtils.getAccountVerificationEmailMessage(user.getEmail(), verificationCode);
+        emailService.sendSimpleMailMessage(user.getEmail(), message);
     }
 
     public List<UserResponse> findAll() {

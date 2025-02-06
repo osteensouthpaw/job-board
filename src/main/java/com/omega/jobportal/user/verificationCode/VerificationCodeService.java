@@ -13,7 +13,7 @@ public class VerificationCodeService {
     private final VerificationCodeRepository verificationCodeRepository;
 
     private String generateVerificationCode() {
-        return RandomStringUtils.secure().next(6);
+        return RandomStringUtils.random(6, false, true);
     }
 
     public String createVerificationCode(AppUser appUser) {
