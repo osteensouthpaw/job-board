@@ -12,9 +12,12 @@ import com.omega.jobportal.location.Location;
 import com.omega.jobportal.location.LocationService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.search.mapper.orm.Search;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +30,7 @@ public class JobPostService {
     private final CompanyService companyService;
     private final LocationService locationService;
     private final JobPostDtoMapper jobPostDtoMapper;
+    private final EntityManager entityManager;
 
     public JobPostResponse createJobPost(JobPostRequest request) {
         AppUser recruiter = authService.getSession();
@@ -82,5 +86,17 @@ public class JobPostService {
 
     public JobPostResponse findJobById(Long id) {
         return jobPostDtoMapper.apply(findJobPostById(id));
+    }
+
+    @Transactional
+    public List<JobPostResponse> searchJobPosts(String searchQuery) {
+        return Search.session(entityManager)
+                .search(JobPost.class)
+                .where(field -> field.match()
+                        .fields("jobTitle", "description")
+                        .matching(searchQuery))
+                .fetchAllHits()
+                .stream()
+                .map(jobPostDtoMapper).toList();
     }
 }

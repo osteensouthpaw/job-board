@@ -46,4 +46,10 @@ public class JobPostController {
         jobPostService.deleteJobPost(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery) {
+        List<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery);
+        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
 }
