@@ -11,6 +11,8 @@ import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Indexed
 @Entity
 @Table(name = "job_posts")
 public class JobPost {
@@ -40,9 +43,11 @@ public class JobPost {
     private Location location;
 
     @Column(name = "job_title")
+    @FullTextField
     private String jobTitle;
 
     @Column(length = 1000)
+    @FullTextField
     private String description;
 
     @Column(nullable = false, name = "hourly_rate")

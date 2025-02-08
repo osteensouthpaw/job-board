@@ -94,6 +94,20 @@
             <version>3.17.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.hibernate.search/hibernate-search-backend-lucene -->
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-backend-lucene</artifactId>
+            <version>7.2.2.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate.search/hibernate-search-mapper-orm -->
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-orm</artifactId>
+            <version>7.2.2.Final</version>
+        </dependency>
+
+
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.boot</groupId>-->
         <!--            <artifactId>spring-boot-devtools</artifactId>-->
@@ -127,6 +141,14 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>--enable-native-access=ALL-UNNAMED</jvmArguments>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
