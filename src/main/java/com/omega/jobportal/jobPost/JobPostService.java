@@ -4,6 +4,7 @@ import com.omega.jobportal.auth.AuthenticationService;
 import com.omega.jobportal.company.Company;
 import com.omega.jobportal.company.CompanyService;
 import com.omega.jobportal.exception.ApiException;
+import com.omega.jobportal.jobPost.data.JobPostFilterQuery;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
@@ -77,13 +78,6 @@ public class JobPostService {
                 .orElseThrow(() -> new ApiException("no such job post", HttpStatus.NOT_FOUND));
     }
 
-    public List<JobPostResponse> findAllJobs() {
-        return jobPostRepository
-                .findAll()
-                .stream().map(jobPostDtoMapper)
-                .toList();
-    }
-
     public JobPostResponse findJobById(Long id) {
         return jobPostDtoMapper.apply(findJobPostById(id));
     }
@@ -98,5 +92,10 @@ public class JobPostService {
                 .fetchAllHits()
                 .stream()
                 .map(jobPostDtoMapper).toList();
+    }
+
+    public List<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery) {
+        return jobPostRepository.findAll(JobPostSpecificationBuilder.filterJobs(filterQuery))
+                .stream().map(jobPostDtoMapper).toList();
     }
 }

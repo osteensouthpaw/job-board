@@ -10,15 +10,17 @@ import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -66,7 +68,7 @@ public class JobPost {
     private ExperienceLevel experienceLevel;
 
     @Column(name = "created_at")
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(name = "application_deadline")
