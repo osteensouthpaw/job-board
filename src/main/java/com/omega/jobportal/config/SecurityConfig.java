@@ -26,7 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/api/v1/job-posts", "/api/v1/job-posts").hasRole("RECRUITER")
+                .requestMatchers("/api/v1/job-posts", "/api/v1/job-posts").hasAnyRole("RECRUITER", "JOB_SEEKER")
                 .anyRequest().permitAll());
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable);

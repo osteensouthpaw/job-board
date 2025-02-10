@@ -1,5 +1,6 @@
 package com.omega.jobportal.jobPost;
 
+import com.omega.jobportal.jobPost.data.JobPostFilterQuery;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
@@ -24,8 +25,8 @@ public class JobPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JobPostResponse>> findAllJobs() {
-        List<JobPostResponse> jobPosts = jobPostService.findAllJobs();
+    public ResponseEntity<List<JobPostResponse>> findJobPosts(JobPostFilterQuery filterQuery) {
+        List<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 
