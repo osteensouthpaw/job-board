@@ -4,6 +4,7 @@ import com.omega.jobportal.jobPost.data.JobPostFilterQuery;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
+import com.omega.jobportal.utils.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,11 @@ public class JobPostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JobPostResponse>> findJobPosts(JobPostFilterQuery filterQuery) {
-        List<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery);
+    public ResponseEntity<PageResponse<JobPostResponse>>
+    findJobPosts(@RequestParam(value = "page", defaultValue = "0") int page,
+                 @RequestParam(value = "size", defaultValue = "10") int size,
+                 JobPostFilterQuery filterQuery) {
+        PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 

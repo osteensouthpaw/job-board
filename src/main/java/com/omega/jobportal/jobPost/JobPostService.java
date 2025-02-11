@@ -13,9 +13,13 @@ import com.omega.jobportal.location.Location;
 import com.omega.jobportal.location.LocationService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
+import com.omega.jobportal.utils.PageResponse;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,8 +98,13 @@ public class JobPostService {
                 .map(jobPostDtoMapper).toList();
     }
 
-    public List<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery) {
-        return jobPostRepository.findAll(JobPostSpecificationBuilder.filterJobs(filterQuery))
-                .stream().map(jobPostDtoMapper).toList();
+    public PageResponse<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery, int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobPostResponse> jobPosts = jobPostRepository
+                .findAll(JobPostSpecificationBuilder.filterJobs(filterQuery), pageRequest).map(jobPostDtoMapper);
+        return new PageResponse<>(jobPosts);
     }
+
+
 }
