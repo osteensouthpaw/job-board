@@ -8,7 +8,10 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
+import com.omega.jobportal.utils.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +20,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +48,10 @@ public class UserService implements UserDetailsService {
         emailService.sendSimpleMailMessage(user.getEmail(), message);
     }
 
-    public List<UserResponse> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(userDtoMapper).toList();
+    public PageResponse<UserResponse> findAll(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<UserResponse> pagedUsers = userRepository.findAll(pageRequest).map(userDtoMapper);
+        return new PageResponse<>(pagedUsers);
     }
 
     public AppUser findUserById(Long id) {

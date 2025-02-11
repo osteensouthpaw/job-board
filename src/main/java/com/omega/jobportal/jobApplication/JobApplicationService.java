@@ -11,12 +11,16 @@ import com.omega.jobportal.jobPost.JobPostService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserService;
 import com.omega.jobportal.user.UserType;
+import com.omega.jobportal.utils.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class JobApplicationService {
     private final JobApplicationDtoMapper jobApplicationDtoMapper;
     private final UserService userService;
 
+    @Transactional
     public JobApplicationResponse createJobApplication(JobApplicationRequest request) {
         AppUser applicant = validatedApplicant();
         var jobPost = jobPostService.findJobPostById(request.jobPostId());
@@ -41,6 +46,7 @@ public class JobApplicationService {
                 .orElseGet(() -> {
                     JobApplication jobApplication = new JobApplication(jobApplicationKey);
                     JobApplication savedJobApplication = jobApplicationRepository.save(jobApplication);
+                    //todo: send confirmation email;
                     return jobApplicationDtoMapper.apply(savedJobApplication);
                 });
     }
@@ -55,19 +61,22 @@ public class JobApplicationService {
                 });
     }
 
-    public List<JobApplicationResponse> findAllApplications() {
-        return jobApplicationRepository.findAll()
-                .stream()
-                .map(jobApplicationDtoMapper)
-                .toList();
+    public PageResponse<JobApplicationResponse> findAllApplications(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobApplicationResponse> jobApplications = jobApplicationRepository.findAll(pageRequest)
+                .map(jobApplicationDtoMapper);
+        return new PageResponse<>(jobApplications);
     }
 
-    public List<JobApplicationResponse> findJobPostApplicationsByJobPostId(Long jobPostId) {
+    public PageResponse<JobApplicationResponse> findJobPostApplicationsByJobPostId(Long jobPostId, int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
         AppUser loggedInUser = authenticationService.getSession();
-        return jobApplicationRepository
-                .findJobPostApplicationsById(jobPostId, loggedInUser.getId())
-                .stream().map(jobApplicationDtoMapper)
-                .toList();
+        Page<JobApplicationResponse> jobApplications = jobApplicationRepository
+                .findJobPostApplicationsById(jobPostId, loggedInUser.getId(), pageRequest)
+                .map(jobApplicationDtoMapper);
+        return new PageResponse<>(jobApplications);
     }
 
     public void acceptApplication(Long jobPostId, Long applicantId) {
