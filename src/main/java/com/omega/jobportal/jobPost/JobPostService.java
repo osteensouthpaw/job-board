@@ -18,6 +18,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -87,22 +88,25 @@ public class JobPostService {
     }
 
     @Transactional
-    public List<JobPostResponse> searchJobPosts(String searchQuery) {
-        return Search.session(entityManager)
+    public PageResponse<JobPostResponse> searchJobPosts(String searchQuery, int page, int size) {
+        List<JobPostResponse> jobPosts = Search.session(entityManager)
                 .search(JobPost.class)
                 .where(field -> field.match()
                         .fields("jobTitle", "description")
                         .matching(searchQuery))
-                .fetchAllHits()
-                .stream()
-                .map(jobPostDtoMapper).toList();
+                .fetchHits(page * size, size)
+                .stream().map(jobPostDtoMapper).toList();
+
+        var pagedJobPosts = new PageImpl<>(jobPosts, PageRequest.of(page, size), jobPosts.size());
+        return new PageResponse<>(pagedJobPosts);
     }
 
     public PageResponse<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         PageRequest pageRequest = PageRequest.of(page, size, sort);
         Page<JobPostResponse> jobPosts = jobPostRepository
-                .findAll(JobPostSpecificationBuilder.filterJobs(filterQuery), pageRequest).map(jobPostDtoMapper);
+                .findAll(JobPostSpecificationBuilder.filterJobs(filterQuery), pageRequest)
+                .map(jobPostDtoMapper);
         return new PageResponse<>(jobPosts);
     }
 

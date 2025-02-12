@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/job-posts")
 @RequiredArgsConstructor
@@ -53,8 +51,10 @@ public class JobPostController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery) {
-        List<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery);
+    public ResponseEntity<PageResponse<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery,
+                                                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 }
