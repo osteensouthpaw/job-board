@@ -19,25 +19,18 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
-
-    @Column(name = "is_email_sent")
-    private boolean isEmailSent = false;
     private LocalDateTime expiresAt;
 
     @ManyToOne
     private AppUser appUser;
 
     public PasswordResetToken(AppUser user) {
-        appUser = user;
+        this.appUser = user;
         this.token = RandomStringUtils.random(6, false, true);
+        this.expiresAt = LocalDateTime.now().plusMinutes(15);
     }
 
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiresAt);
-    }
-
-    public void onEmailSent() {
-        this.isEmailSent = true;
-        this.expiresAt = LocalDateTime.now().plusMinutes(15);
     }
 }

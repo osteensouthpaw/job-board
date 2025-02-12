@@ -79,6 +79,8 @@ public class UserService implements UserDetailsService {
 
         passwordResetTokenRepository.findByToken(request.passwordToken())
                 .ifPresentOrElse(token -> {
+                            if (token.isExpired())
+                                throw new ApiException("Password reset link is expired", HttpStatus.BAD_REQUEST);
                             AppUser appUser = token.getAppUser();
                             appUser.setPassword(passwordEncoder.encode(request.password()));
                             userRepository.save(appUser);
