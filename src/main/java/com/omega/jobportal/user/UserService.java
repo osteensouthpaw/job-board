@@ -4,9 +4,12 @@ import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
+import com.omega.jobportal.user.data.UpdateUserPasswordRequest;
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
+import com.omega.jobportal.user.passwordReset.PasswordResetToken;
+import com.omega.jobportal.user.passwordReset.PasswordResetTokenRepository;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
 import com.omega.jobportal.utils.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
     private final EmailService emailService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Transactional
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -44,7 +48,7 @@ public class UserService implements UserDetailsService {
 
     private void sendVerificationEmail(AppUser user) {
         String verificationCode = verificationCodeService.createVerificationCode(user);
-        String message = EmailUtils.getAccountVerificationEmailMessage(user.getEmail(), verificationCode);
+        String message = EmailUtils.getAccountVerificationEmailMessage(user.getFirstName(), verificationCode);
         emailService.sendSimpleMailMessage(user.getEmail(), message);
     }
 
@@ -57,6 +61,37 @@ public class UserService implements UserDetailsService {
     public AppUser findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public void forgotPassword(String email) {
+        AppUser user = findUserByEmail(email);
+        var passwordResetToken = new PasswordResetToken(user);
+        var resetToken = passwordResetTokenRepository.save(passwordResetToken);
+        String message = EmailUtils.getResetPasswordEmailMessage(user.getFirstName(), resetToken.getToken());
+        emailService.sendSimpleMailMessage(user.getEmail(), message);
+    }
+
+    @Transactional
+    public void resetPassword(UpdateUserPasswordRequest request) {
+        if (!request.password().equals(request.confirmPassword()))
+            throw new ApiException("Passwords do not match!", HttpStatus.BAD_REQUEST);
+
+        passwordResetTokenRepository.findByToken(request.passwordToken())
+                .ifPresentOrElse(token -> {
+                            AppUser appUser = token.getAppUser();
+                            appUser.setPassword(passwordEncoder.encode(request.password()));
+                            userRepository.save(appUser);
+                            //todo: send confirmation email to user;
+                        },
+                        () -> {
+                            throw new ApiException("password reset token not found", HttpStatus.NOT_FOUND);
+                        });
+    }
+
+    public AppUser findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new ApiException("user with email".concat(email), HttpStatus.NOT_FOUND));
     }
 
     @Override
