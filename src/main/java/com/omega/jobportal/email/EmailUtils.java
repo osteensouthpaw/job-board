@@ -11,8 +11,8 @@ public class EmailUtils {
     }
 
     public static String getResetPasswordEmailMessage(String name, String resetPasswordCode) {
-        String message = "Hello" + name + "\n \n Here is your reset password link. Please click the link below to verify your accout." +
-                " \n \n Please note that the link will expire in 15 minutes".concat(getResetPasswordURL(resetPasswordCode));
+        String message = "Hello " + name + "\n \n Here is your reset password link. Please click the link below to verify your accout." +
+                "\n \n Please note that the link will expire in 15 minutes \n \n".concat(getResetPasswordURL(resetPasswordCode));
         return message;
     }
 

@@ -24,6 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.omega.jobportal.constants.Constants.NEW_USER_ACCOUNT_VERIFICATION;
+import static com.omega.jobportal.constants.Constants.RESET_PASSWORD;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -49,7 +52,7 @@ public class UserService implements UserDetailsService {
     private void sendVerificationEmail(AppUser user) {
         String verificationCode = verificationCodeService.createVerificationCode(user);
         String message = EmailUtils.getAccountVerificationEmailMessage(user.getFirstName(), verificationCode);
-        emailService.sendSimpleMailMessage(user.getEmail(), message);
+        emailService.sendSimpleMailMessage(user.getEmail(), message, NEW_USER_ACCOUNT_VERIFICATION);
     }
 
     public PageResponse<UserResponse> findAll(int page, int size) {
@@ -69,7 +72,7 @@ public class UserService implements UserDetailsService {
         var passwordResetToken = new PasswordResetToken(user);
         var resetToken = passwordResetTokenRepository.save(passwordResetToken);
         String message = EmailUtils.getResetPasswordEmailMessage(user.getFirstName(), resetToken.getToken());
-        emailService.sendSimpleMailMessage(user.getEmail(), message);
+        emailService.sendSimpleMailMessage(user.getEmail(), message, RESET_PASSWORD);
     }
 
     @Transactional
