@@ -24,12 +24,12 @@ public class EmailService implements EmailSender {
 
     @Override
     @Async
-    public void sendSimpleMailMessage(String to, String body) {
+    public void sendSimpleMailMessage(String to, String body, Constants subject) {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom(username);
             simpleMailMessage.setTo(to);
-            simpleMailMessage.setSubject(Constants.NEW_USER_ACCOUNT_VERIFICATION.getMessage());
+            simpleMailMessage.setSubject(subject.getMessage());
             simpleMailMessage.setText(body);
             javaMailSender.send(simpleMailMessage);
             log.info("email sent successfully");
