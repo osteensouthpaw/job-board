@@ -2,6 +2,7 @@ package com.omega.jobportal.jobSeekerProfile;
 
 import com.omega.jobportal.jobSeekerProfile.data.JobSeekerProfileRequest;
 import com.omega.jobportal.jobSeekerProfile.data.JobSeekerProfileResponse;
+import com.omega.jobportal.utils.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,16 @@ public class JobSeekerProfileController {
         var profile = jobSeekerProfileService.createProfile(request);
         return new ResponseEntity<>(profile, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<JobSeekerProfileResponse>>
+    searchProfileBios(@RequestParam(name = "searchQuery") String searchQuery,
+                      @RequestParam(value = "page", defaultValue = "0") int page,
+                      @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageResponse<JobSeekerProfileResponse> jobSeekers = jobSeekerProfileService.searchJobSeekers(searchQuery, page, size);
+        return new ResponseEntity<>(jobSeekers, HttpStatus.OK);
+    }
+
 
     @GetMapping("/me")
     public ResponseEntity<JobSeekerProfileResponse> viewProfile() {

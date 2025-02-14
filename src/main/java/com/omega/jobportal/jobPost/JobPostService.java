@@ -11,19 +11,16 @@ import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
 import com.omega.jobportal.jobPost.dtoMapper.JobPostDtoMapper;
 import com.omega.jobportal.location.Location;
 import com.omega.jobportal.location.LocationService;
+import com.omega.jobportal.searching.SearchService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserType;
 import com.omega.jobportal.utils.PageResponse;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.search.mapper.orm.Search;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +33,7 @@ public class JobPostService {
     private final CompanyService companyService;
     private final LocationService locationService;
     private final JobPostDtoMapper jobPostDtoMapper;
-    private final EntityManager entityManager;
+    private final SearchService searchService;
 
     public JobPostResponse createJobPost(JobPostRequest request) {
         AppUser recruiter = authService.getSession();
@@ -87,18 +84,12 @@ public class JobPostService {
         return jobPostDtoMapper.apply(findJobPostById(id));
     }
 
-    @Transactional
     public PageResponse<JobPostResponse> searchJobPosts(String searchQuery, int page, int size) {
-        List<JobPostResponse> jobPosts = Search.session(entityManager)
-                .search(JobPost.class)
-                .where(field -> field.match()
-                        .fields("jobTitle", "description")
-                        .matching(searchQuery))
-                .fetchHits(page * size, size)
-                .stream().map(jobPostDtoMapper).toList();
-
-        var pagedJobPosts = new PageImpl<>(jobPosts, PageRequest.of(page, size), jobPosts.size());
-        return new PageResponse<>(pagedJobPosts);
+        List<String> searchFields = List.of("jobTitle", "description");
+        Page<JobPostResponse> searchResult = searchService.search(
+                JobPost.class, searchQuery, page, size, searchFields, jobPostDtoMapper
+        );
+        return new PageResponse<>(searchResult);
     }
 
     public PageResponse<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery, int page, int size) {
