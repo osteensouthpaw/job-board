@@ -5,10 +5,13 @@ import com.omega.jobportal.jobSeekerProfile.data.JobSeekerProfileRequest;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Indexed
 @Getter
 @Setter
 @Builder
@@ -30,6 +33,7 @@ public class JobSeekerProfile {
     private BigDecimal currentAnnualSalary;
 
     @Column(length = 1000)
+    @FullTextField
     private String bio;
 
     @Column(nullable = false)
