@@ -44,7 +44,7 @@ public class JobApplicationService {
         return jobApplicationRepository.findById(jobApplicationKey)
                 .map(jobApplicationDtoMapper)
                 .orElseGet(() -> {
-                    JobApplication jobApplication = new JobApplication(jobApplicationKey);
+                    JobApplication jobApplication = new JobApplication(jobApplicationKey, request.resumeUrl());
                     JobApplication savedJobApplication = jobApplicationRepository.save(jobApplication);
                     //todo: send confirmation email;
                     return jobApplicationDtoMapper.apply(savedJobApplication);
@@ -69,8 +69,18 @@ public class JobApplicationService {
         return new PageResponse<>(jobApplications);
     }
 
+    public PageResponse<JobApplicationResponse> findAllApplicationsByApplicant(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "applicationDate");
+        AppUser appUser = validatedApplicant();
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobApplicationResponse> jobApplications = jobApplicationRepository
+                .findJobApplicationsByAppUserId(appUser.getId(), pageRequest)
+                .map(jobApplicationDtoMapper);
+        return new PageResponse<>(jobApplications);
+    }
+
     public PageResponse<JobApplicationResponse> findJobPostApplicationsByJobPostId(Long jobPostId, int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "applicationDate");
         PageRequest pageRequest = PageRequest.of(page, size, sort);
         AppUser loggedInUser = authenticationService.getSession();
         Page<JobApplicationResponse> jobApplications = jobApplicationRepository

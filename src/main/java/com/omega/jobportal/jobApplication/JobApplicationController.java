@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
-    @GetMapping
-    public ResponseEntity<PageResponse<JobApplicationResponse>>
-    getAllJobApplications(@RequestParam(value = "page", defaultValue = "0") int page,
-                          @RequestParam(value = "size", defaultValue = "10") int size) {
-        var jobApplications = jobApplicationService.findAllApplications(page, size);
-        return new ResponseEntity<>(jobApplications, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<PageResponse<JobApplicationResponse>>
+//    getAllJobApplications(@RequestParam(value = "page", defaultValue = "0") int page,
+//                          @RequestParam(value = "size", defaultValue = "10") int size) {
+//        var jobApplications = jobApplicationService.findAllApplications(page, size);
+//        return new ResponseEntity<>(jobApplications, HttpStatus.OK);
+//    }
 
     @PostMapping
     public ResponseEntity<JobApplicationResponse> createJobApplication(@RequestBody @Valid JobApplicationRequest request) {
@@ -41,6 +41,14 @@ public class JobApplicationController {
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size) {
         var applications = jobApplicationService.findJobPostApplicationsByJobPostId(id, page, size);
+        return ResponseEntity.ok(applications);
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<JobApplicationResponse>>
+    jobApplicationsByApplicant(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size) {
+        var applications = jobApplicationService.findAllApplicationsByApplicant(page, size);
         return ResponseEntity.ok(applications);
     }
 

@@ -1,6 +1,6 @@
 ```toml
 name = 'create jobPost'
-method = 'PATCH'
+method = 'POST'
 url = 'http://localhost:8080/api/v1/job-posts/31'
 sortWeight = 1000000
 id = '468c231d-00f3-441b-983d-1962fddf0deb'
