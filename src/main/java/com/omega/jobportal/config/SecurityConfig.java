@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -32,14 +31,14 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable);
 
-        http.oauth2Login(Customizer.withDefaults());
-        http.formLogin(Customizer.withDefaults());
-        http.exceptionHandling(customizer -> {
-            customizer.authenticationEntryPoint(
-                    (request, response, authException) -> {
-                        response.sendError(401, "Unauthorized");
-                    });
-        });
+//        http.oauth2Login(Customizer.withDefaults());
+//        http.formLogin(Customizer.withDefaults());
+//        http.exceptionHandling(customizer -> {
+//            customizer.authenticationEntryPoint(
+//                    (request, response, authException) -> {
+//                        response.sendError(401, "Unauthorized");
+//                    });
+//        });
 
         return http.build();
     }

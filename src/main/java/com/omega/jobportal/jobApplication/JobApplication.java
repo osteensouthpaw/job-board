@@ -34,7 +34,9 @@ public class JobApplication {
     @CreatedDate
     private LocalDateTime applicationDate;
 
-    public JobApplication(JobApplicationKey id) {
+    public JobApplication(JobApplicationKey id, String resumeUrl) {
         this.id = id;
+        this.applicationStatus = ApplicationStatus.APPLIED;
+        this.resumeUrl = resumeUrl;
     }
 }
