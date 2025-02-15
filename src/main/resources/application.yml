@@ -35,8 +35,23 @@ spring:
         required: true
       mail:
         debug:
+          true
+
+  # oauth login configurations
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liNvkpO4HNyIyNZU
+            client-secret: e2d84ee8b2482577fffa744ffeda44460fccef39
 
 #      logging configurations
 logging:
   level:
     web: debug
+
+
+
+
+
