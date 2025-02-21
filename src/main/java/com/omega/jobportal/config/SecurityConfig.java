@@ -1,5 +1,8 @@
 package com.omega.jobportal.config;
 
+import com.omega.jobportal.auth.CustomOauth2UserService;
+import com.omega.jobportal.auth.GlobalAuthenticationEntryPoint;
+import com.omega.jobportal.auth.Oauth2LoginSuccessHandler;
 import com.omega.jobportal.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,23 +25,25 @@ import org.springframework.security.web.context.SecurityContextRepository;
 public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final GlobalAuthenticationEntryPoint globalAuthenticationEntryPoint;
+    private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    private final CustomOauth2UserService customOauth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/auth/**", "/login/**", "/**", "/oauth2/authorization/**").permitAll()
                 .anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable);
+                .cors(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
+                        .successHandler(oauth2LoginSuccessHandler)
+                );
 
-//        http.oauth2Login(Customizer.withDefaults());
-//        http.formLogin(Customizer.withDefaults());
-//        http.exceptionHandling(customizer -> {
-//            customizer.authenticationEntryPoint(
-//                    (request, response, authException) -> {
-//                        response.sendError(401, "Unauthorized");
-//                    });
-//        });
+        http.exceptionHandling(customizer ->
+                customizer.authenticationEntryPoint(globalAuthenticationEntryPoint)
+        );
 
         return http.build();
     }

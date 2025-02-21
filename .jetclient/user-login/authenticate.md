@@ -1,7 +1,7 @@
 ```toml
 name = 'authenticate'
-method = 'POST'
-url = 'http://localhost:8080/api/v1/auth/login'
+method = 'GET'
+url = 'http://localhost:8080/api/v1/auth/me'
 sortWeight = 2000000
 id = 'c2708189-ec4b-410b-acaf-f347dd0bfbaa'
 

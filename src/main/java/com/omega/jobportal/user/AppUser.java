@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 
@@ -26,10 +27,9 @@ public class AppUser {
     @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
@@ -38,13 +38,11 @@ public class AppUser {
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserType userType;
 
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Gender gender;
 
     @CreatedDate
@@ -60,5 +58,16 @@ public class AppUser {
         this.imageUrl = request.imageUrl();
         this.gender = request.gender();
         this.phone = request.phone();
+    }
+
+    public AppUser(OAuth2User oAuth2User) {
+        String name = oAuth2User.getAttribute("name");
+        String email = oAuth2User.getAttribute("email");
+        String[] names = name.split(" ");
+        if (names.length > 1) {
+            this.firstName = names[0];
+            this.lastName = names[1];
+        } else this.firstName = name;
+        this.email = email;
     }
 }
