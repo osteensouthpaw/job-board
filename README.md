@@ -12,9 +12,9 @@ Search (Lucene).
 - **Job Posting & Management:** Create, update, delete, and view job posts.
 - **Full-Text Job Search:** Advanced search capabilities using Hibernate Search (Lucene).
 - **Pagination, Filtering & Sorting:** Efficient data retrieval for large datasets.
-- **Email Notifications:** Integrated with Spring Boot Mail.
+- **Email Notifications:** Integrated with Spring Boot Mail and JTE for rendering beautiful emails.
 - **RESTful API:** Designed for seamless integration with frontend applications.
-- **Server-Side Rendering:** Utilizes JTE for dynamic HTML content.
+
 
 ## Tech Stack
 
