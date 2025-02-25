@@ -40,4 +40,10 @@ public class UserController {
         userService.resetPassword(request);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("update-password")
+    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UpdateUserPasswordRequest request) {
+        userService.updatePassword(request);
+        return ResponseEntity.noContent().build();
+    }
 }
