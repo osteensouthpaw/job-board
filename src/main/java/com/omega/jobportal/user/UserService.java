@@ -1,6 +1,5 @@
 package com.omega.jobportal.user;
 
-import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
@@ -17,9 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +25,7 @@ import static com.omega.jobportal.constants.Constants.RESET_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
     private final PasswordEncoder passwordEncoder;
@@ -97,12 +93,5 @@ public class UserService implements UserDetailsService {
     public AppUser findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ApiException("user with email".concat(email), HttpStatus.NOT_FOUND));
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmail(email)
-                .map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
