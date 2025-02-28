@@ -24,6 +24,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     private static final Logger log = LoggerFactory.getLogger(CustomOauth2UserService.class);
     private final UserConnectedAccountRepository userConnectedAccountRepository;
     private final UserRepository userRepository;
+    private final GitHubEmailFetcher emailFetcher;
+    private static final String NAME_ATTRIBUTE = "login";
+    private static final String EMAIL_KEY = "email";
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -43,8 +46,21 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(null)),
                 oAuth2User.getAttributes(),
-                "email"
+                NAME_ATTRIBUTE
         );
+    }
+
+
+    private String extractPrimaryEmailAddress(
+            OAuth2User oauth2User,
+            String token) {
+        String primaryEmailAddress = oauth2User.getAttribute(EMAIL_KEY);
+
+        if (!(primaryEmailAddress == null || primaryEmailAddress.isBlank())) {
+            return primaryEmailAddress;
+        }
+
+        return emailFetcher.fetchPrimaryEmailAddress(token);
     }
 
     public void createUser(String providerId, String provider, OAuth2User oAuth2User) {
