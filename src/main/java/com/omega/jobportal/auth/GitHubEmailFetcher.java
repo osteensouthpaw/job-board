@@ -33,6 +33,7 @@ public record GitHubEmailFetcher(RestClient restClient) {
                 .orElse(null);
     }
 
-    private record GithubEmail(String email, Boolean primary) {
+    private record GithubEmail(String email,
+                               Boolean primary) {
     }
 }
