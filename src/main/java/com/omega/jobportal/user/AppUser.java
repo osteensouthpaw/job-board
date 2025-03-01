@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 
@@ -60,9 +59,7 @@ public class AppUser {
         this.phone = request.phone();
     }
 
-    public AppUser(OAuth2User oAuth2User) {
-        String name = oAuth2User.getAttribute("name");
-        String email = oAuth2User.getAttribute("email");
+    public AppUser(String name, String email) {
         String[] names = name.split(" ");
         if (names.length > 1) {
             this.firstName = names[0];
