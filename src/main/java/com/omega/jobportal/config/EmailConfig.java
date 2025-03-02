@@ -3,17 +3,13 @@ package com.omega.jobportal.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Properties;
 
 @Configuration
-@EnableJpaAuditing
-public class ApplicationConfig {
+public class EmailConfig {
     @Value("${spring.mail.host}")
     private String host;
 
@@ -25,11 +21,6 @@ public class ApplicationConfig {
 
     @Value("${spring.mail.port}")
     private int port;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public JavaMailSender getJavaMailSender() {

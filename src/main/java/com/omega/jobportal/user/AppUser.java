@@ -60,9 +60,7 @@ public class AppUser {
         this.phone = request.phone();
     }
 
-    public AppUser(OAuth2User oAuth2User) {
-        String name = oAuth2User.getAttribute("name");
-        String email = oAuth2User.getAttribute("email");
+    public AppUser(String name, String email) {
         String[] names = name.split(" ");
         if (names.length > 1) {
             this.firstName = names[0];

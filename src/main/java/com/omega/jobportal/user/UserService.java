@@ -17,9 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,7 @@ import static com.omega.jobportal.constants.Constants.RESET_PASSWORD;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
     private final PasswordEncoder passwordEncoder;
@@ -77,9 +75,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void resetPassword(UpdateUserPasswordRequest request) {
-        if (!request.password().equals(request.confirmPassword()))
-            throw new ApiException("Passwords do not match!", HttpStatus.BAD_REQUEST);
-
+        confirmPassword(request.password(), request.confirmPassword());
         passwordResetTokenRepository.findByToken(request.passwordToken())
                 .ifPresentOrElse(token -> {
                             if (token.isExpired())
@@ -94,15 +90,29 @@ public class UserService implements UserDetailsService {
                         });
     }
 
+    public void updatePassword(UpdateUserPasswordRequest request) {
+        SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser appUser = user.getUser();
+        confirmPassword(request.password(), request.confirmPassword());
+        boolean isValidPassword = passwordEncoder.matches(request.oldPassword(), appUser.getPassword());
+        if (!isValidPassword)
+            throw new ApiException("Wrong password", HttpStatus.BAD_REQUEST);
+
+        if (request.oldPassword().equals(request.password()))
+            throw new ApiException("old password cannot be new password", HttpStatus.BAD_REQUEST);
+
+        String hashedPassword = passwordEncoder.encode(request.password());
+        appUser.setPassword(hashedPassword);
+        userRepository.save(appUser);
+    }
+
     public AppUser findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ApiException("user with email".concat(email), HttpStatus.NOT_FOUND));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmail(email)
-                .map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    private void confirmPassword(String password, String confirmPassword) {
+        if (!password.equals(confirmPassword))
+            throw new ApiException("Passwords do not match!", HttpStatus.BAD_REQUEST);
     }
 }
