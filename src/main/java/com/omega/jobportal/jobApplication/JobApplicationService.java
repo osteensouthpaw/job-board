@@ -89,7 +89,7 @@ public class JobApplicationService {
         return new PageResponse<>(jobApplications);
     }
 
-    public void acceptApplication(Long jobPostId, Long applicantId) {
+    public void acceptApplication(Long applicantId, Long jobPostId) {
         AppUser applicant = userService.findUserById(applicantId);
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
         JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
@@ -103,7 +103,7 @@ public class JobApplicationService {
                 });
     }
 
-    public void rejectApplication(Long jobPostId, Long applicantId) {
+    public void rejectApplication(Long applicantId, Long jobPostId) {
         AppUser applicant = userService.findUserById(applicantId);
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
         JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);

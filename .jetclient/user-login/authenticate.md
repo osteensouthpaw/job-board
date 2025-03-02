@@ -1,7 +1,7 @@
 ```toml
 name = 'authenticate'
-method = 'GET'
-url = 'http://localhost:8080/api/v1/auth/me'
+method = 'POST'
+url = 'http://localhost:8080/api/v1/auth/login'
 sortWeight = 2000000
 id = 'c2708189-ec4b-410b-acaf-f347dd0bfbaa'
 
@@ -12,7 +12,7 @@ type = 'NO_AUTH'
 type = 'JSON'
 raw = '''
 {
-  "email": "john.doe@hello3.com",
-  "password": "securePassword2"
+  "email": "john.doe@yahoo6.com",
+  "password": "securePassword"
 }'''
 ```
