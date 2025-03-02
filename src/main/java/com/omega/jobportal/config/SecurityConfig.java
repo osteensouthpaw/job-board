@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,20 +23,52 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import static com.omega.jobportal.user.UserType.JOB_SEEKER;
+import static com.omega.jobportal.user.UserType.RECRUITER;
+import static org.springframework.http.HttpMethod.*;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final GlobalAuthenticationEntryPoint globalAuthenticationEntryPoint;
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final CustomOauth2UserService customOauth2UserService;
     private final UserRepository userRepository;
 
+    private final String[] AUTH_ROUTES = new String[]{
+            "/api/v1/auth/**",
+            "/oauth2/authorization/**",
+            "/login/**",
+    };
+
+    private final String[] WHITE_LIST = new String[]{
+            "/api/v1/job-posts",
+            "/api/v1/job-posts/**",
+    };
+
+    private final String[] JOB_SEEKER_ROUTES = new String[]{
+            "/api/v1/job-seeker/**",
+    };
+
+    private final String[] RECRUITER_ROUTES = new String[]{
+            "/api/v1/recruiters/companies",
+            "/api/v1/job-applications/reject",
+            "/api/v1/job-applications/accept",
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/api/v1/auth/**", "/login/**", "/**", "/oauth2/authorization/**").permitAll()
+                .requestMatchers(AUTH_ROUTES).permitAll()
+                .requestMatchers(GET, WHITE_LIST).permitAll()
+                .requestMatchers(POST, JOB_SEEKER_ROUTES).hasRole(JOB_SEEKER.name())
+                .requestMatchers(PATCH, JOB_SEEKER_ROUTES).hasRole(JOB_SEEKER.name())
+                .requestMatchers(DELETE, JOB_SEEKER_ROUTES).hasRole(JOB_SEEKER.name())
+                .requestMatchers(RECRUITER_ROUTES).hasRole(RECRUITER.name())
                 .anyRequest().authenticated());
+
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2

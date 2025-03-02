@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,27 +16,22 @@ import org.springframework.web.bind.annotation.*;
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
-//    @GetMapping
-//    public ResponseEntity<PageResponse<JobApplicationResponse>>
-//    getAllJobApplications(@RequestParam(value = "page", defaultValue = "0") int page,
-//                          @RequestParam(value = "size", defaultValue = "10") int size) {
-//        var jobApplications = jobApplicationService.findAllApplications(page, size);
-//        return new ResponseEntity<>(jobApplications, HttpStatus.OK);
-//    }
-
     @PostMapping
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<JobApplicationResponse> createJobApplication(@RequestBody @Valid JobApplicationRequest request) {
         JobApplicationResponse jobApplication = jobApplicationService.createJobApplication(request);
         return new ResponseEntity<>(jobApplication, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('JOB_SEEKER')")
     public ResponseEntity<Void> deleteJobApplication(@PathVariable Long id) {
         jobApplicationService.deleteJobApplication(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<PageResponse<JobApplicationResponse>>
     jobApplicationsByPostId(@PathVariable Long id,
                             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -45,6 +41,7 @@ public class JobApplicationController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('JOB_SEEKER')")
     public ResponseEntity<PageResponse<JobApplicationResponse>>
     jobApplicationsByApplicant(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size) {
