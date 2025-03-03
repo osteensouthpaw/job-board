@@ -20,16 +20,4 @@ public class UserDtoMapper implements Function<AppUser, UserResponse> {
                 user.getUserType()
         );
     }
-
-    public AppUser apply(UserResponse response) {
-        return AppUser.builder()
-                .id(response.id())
-                .firstName(response.firstName())
-                .lastName(response.lastName())
-                .gender(response.gender())
-                .imageUrl(response.imageUrl())
-                .email(response.email())
-                .userType(response.userType())
-                .build();
-    }
 }

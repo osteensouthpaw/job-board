@@ -3,10 +3,12 @@ package com.omega.jobportal.user;
 
 import com.omega.jobportal.user.data.UserRegistrationRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 
@@ -15,8 +17,6 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @Table(name = "app_user")
 public class AppUser {
@@ -54,10 +54,7 @@ public class AppUser {
         this.lastName = request.lastName();
         this.password = encodedPassword;
         this.email = request.email();
-        this.userType = request.userType();
-        this.imageUrl = request.imageUrl();
-        this.gender = request.gender();
-        this.phone = request.phone();
+        this.userType = UserType.PENDING;
     }
 
     public AppUser(String name, String email) {

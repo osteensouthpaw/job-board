@@ -1,12 +1,11 @@
 package com.omega.jobportal.user;
 
+import com.omega.jobportal.user.data.CompleteRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.utils.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,5 +17,10 @@ public class UserController {
     public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
         return userService.findAll(page, size);
+    }
+
+    @PatchMapping("/onboarding")
+    public UserResponse completeRegistration(@Valid @RequestBody CompleteRegistrationRequest request) {
+        return userService.completeUserRegistration(request);
     }
 }
