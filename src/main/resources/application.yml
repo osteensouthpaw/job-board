@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: job-portal
+
+  data:
+    jdbc:
+      dialect: postgresql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: user:email
+
+logging:
+  level:
+    web: debug
+    org:
+      springframework:
+        security: debug
