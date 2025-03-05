@@ -3,7 +3,6 @@ package com.omega.jobportal.jobPost.dtoMapper;
 import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
-import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
         return new JobPostResponse(
                 jobPost.getId(),
                 userDtoMapper.apply(jobPost.getRecruiter()),
-                jobPost.getCompany(),
+                jobPost.getOrganization(),
                 jobPost.getLocation(),
                 jobPost.getJobTitle(),
                 jobPost.getDescription(),
@@ -37,7 +36,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
         );
     }
 
-    public JobPost apply(JobPostUpdateRequest request, JobPost jobPost, Location location) {
+    public JobPost apply(JobPostUpdateRequest request, JobPost jobPost) {
         jobPost.setJobTitle(request.jobTitle());
         jobPost.setDescription(request.jobDescription());
         jobPost.setHourlyRate(request.hourlyRate());
@@ -45,7 +44,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
         jobPost.setExperienceLevel(request.experienceLevel());
         jobPost.setJobType(request.jobType());
         jobPost.setWorkMode(request.workMode());
-        jobPost.setLocation(location);
+        jobPost.setLocation(request.location());
         return jobPost;
     }
 }

@@ -2,8 +2,7 @@ package com.omega.jobportal.company;
 
 
 import com.omega.jobportal.company.businessStream.BusinessStream;
-import com.omega.jobportal.company.data.CompanyRegistrationRequest;
-import com.omega.jobportal.location.Location;
+import com.omega.jobportal.company.data.OrganizationRegistrationRequest;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,8 +15,8 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "companies")
-public class Company {
+@Table(name = "organizations")
+public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +25,8 @@ public class Company {
     @JoinColumn(name = "recruiter_id")
     private AppUser recruiter;
 
-    @Column(nullable = false, name = "company_name")
-    private String companyName;
+    @Column(nullable = false, name = "organization_name")
+    private String organizationName;
 
     @Column(nullable = false, length = 1000)
     private String description;
@@ -39,20 +38,19 @@ public class Company {
     @Column(nullable = false, name = "establishment_date")
     private LocalDate establishmentDate;
 
-    @ManyToOne
-    @JoinColumn(name = "company_location")
-    private Location companyLocation;
+    @Column(nullable = false, name = "organization_location")
+    private String location;
 
     @Column(name = "website_url")
     private String websiteUrl;
 
 
-    public Company(CompanyRegistrationRequest request, Location location, BusinessStream businessStream, AppUser recruiter) {
+    public Organization(OrganizationRegistrationRequest request, BusinessStream businessStream, AppUser recruiter) {
         this.websiteUrl = request.websiteUrl();
-        this.companyLocation = location;
+        this.location = request.companyLocation();
         this.establishmentDate = request.establishmentDate();
         this.description = request.description();
-        this.companyName = request.companyName();
+        this.organizationName = request.companyName();
         this.businessStream = businessStream;
         this.recruiter = recruiter;
     }

@@ -1,12 +1,11 @@
 package com.omega.jobportal.jobPost;
 
 
-import com.omega.jobportal.company.Company;
+import com.omega.jobportal.company.Organization;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobPost.enumerations.WorkMode;
-import com.omega.jobportal.location.Location;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,11 +37,9 @@ public class JobPost {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;
+    private Organization organization;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    private String location;
 
     @Column(name = "job_title")
     @FullTextField
@@ -74,10 +71,10 @@ public class JobPost {
     @Column(name = "application_deadline")
     private LocalDateTime applicationDeadline;
 
-    public JobPost(JobPostRequest request, AppUser recruiter, Company company, Location location) {
+    public JobPost(JobPostRequest request, AppUser recruiter, Organization organization) {
         this.recruiter = recruiter;
-        this.company = company;
-        this.location = location;
+        this.organization = organization;
+        this.location = request.location();
         this.jobTitle = request.jobTitle();
         this.description = request.jobDescription();
         this.hourlyRate = request.hourlyRate();

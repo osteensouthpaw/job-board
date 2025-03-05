@@ -2,5 +2,5 @@ package com.omega.jobportal.company;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CompanyRepository extends JpaRepository<Company, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 }

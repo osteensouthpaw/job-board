@@ -1,6 +1,5 @@
 package com.omega.jobportal.company.data;
 
-import com.omega.jobportal.location.Location;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -8,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record CompanyRegistrationRequest(
+public record OrganizationRegistrationRequest(
         @NotBlank
         @Size(min = 4)
         String companyName,
@@ -23,8 +22,8 @@ public record CompanyRegistrationRequest(
         @PastOrPresent
         LocalDate establishmentDate,
 
-        @NotNull
-        Location companyLocation,
+        @NotBlank
+        String companyLocation,
 
         String websiteUrl
 ) {

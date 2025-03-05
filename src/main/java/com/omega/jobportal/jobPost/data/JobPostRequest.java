@@ -3,7 +3,6 @@ package com.omega.jobportal.jobPost.data;
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobPost.enumerations.WorkMode;
-import com.omega.jobportal.location.Location;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -28,8 +27,8 @@ public record JobPostRequest(
         @Positive
         BigDecimal hourlyRate,
 
-        @NotNull
-        Location location,
+        @NotBlank
+        String location,
 
         @NotNull(message = "work mode is required")
         WorkMode workMode,
