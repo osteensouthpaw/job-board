@@ -19,6 +19,7 @@ Search (Lucene).
 ## Tech Stack
 
 - **Backend:** Spring Boot, Spring Security, Spring Data JPA, Hibernate Search (Lucene)
+- **Frontend** Nextjs 15, React 18, ShadCN UI
 - **Database:** PostgreSQL
 - **Template Engine:** JTE (Just Template Engine)
 - **Build Tool:** Maven
