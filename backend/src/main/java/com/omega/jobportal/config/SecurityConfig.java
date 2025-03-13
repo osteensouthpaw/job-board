@@ -22,6 +22,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 import static com.omega.jobportal.user.UserType.JOB_SEEKER;
 import static com.omega.jobportal.user.UserType.RECRUITER;
@@ -80,6 +84,8 @@ public class SecurityConfig {
                 customizer.authenticationEntryPoint(globalAuthenticationEntryPoint)
         );
 
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         return http.build();
     }
 
@@ -110,5 +116,16 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private CorsConfigurationSource corsConfigurationSource() {
+        return _ -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(List.of("http://localhost:3000"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            config.setAllowedHeaders(List.of("*"));
+            config.setAllowCredentials(true);
+            return config;
+        };
     }
 }
