@@ -35,8 +35,6 @@ public class AppUser {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String phone;
-
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
@@ -50,19 +48,22 @@ public class AppUser {
     private LocalDateTime createdAt;
 
     public AppUser(UserRegistrationRequest request, String encodedPassword) {
-        this.firstName = request.firstName();
-        this.lastName = request.lastName();
+        separateNames(request.name());
         this.password = encodedPassword;
         this.email = request.email();
         this.userType = UserType.PENDING;
     }
 
     public AppUser(String name, String email) {
+        separateNames(name);
+        this.email = email;
+    }
+
+    private void separateNames(String name) {
         String[] names = name.split(" ");
         if (names.length > 1) {
             this.firstName = names[0];
             this.lastName = names[1];
         } else this.firstName = name;
-        this.email = email;
     }
 }
