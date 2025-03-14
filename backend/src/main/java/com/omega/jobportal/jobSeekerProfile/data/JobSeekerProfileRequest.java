@@ -10,6 +10,8 @@ import java.time.LocalDate;
 public record JobSeekerProfileRequest(
         @Size(min = 100, max = 1000)
         String bio,
+        
+        String phone,
 
         @Size(min = 3, max = 100)
         @NotBlank(message = "profession is required")

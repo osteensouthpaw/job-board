@@ -13,8 +13,6 @@ public record CompleteRegistrationRequest(
         @NotNull(message = "userType is required")
         UserType userType,
 
-        String phone,
-
         Gender gender,
 
         String imageUrl

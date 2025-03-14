@@ -54,7 +54,6 @@ public class UserService {
                     user.setUserType(request.userType());
                     user.setImageUrl(request.imageUrl());
                     user.setGender(request.gender());
-                    user.setPhone(request.phone());
                     return userDtoMapper.apply(userRepository.save(user));
                 })
                 .orElseThrow(() -> new ApiException("User not found, please create account first to continue", HttpStatus.NOT_FOUND));

@@ -32,6 +32,9 @@ public class JobSeekerProfile {
     @Column(name = "current_annual_salary")
     private BigDecimal currentAnnualSalary;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(length = 1000)
     @FullTextField
     private String bio;

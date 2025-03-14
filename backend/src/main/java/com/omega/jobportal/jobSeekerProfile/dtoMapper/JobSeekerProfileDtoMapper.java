@@ -28,6 +28,7 @@ public class JobSeekerProfileDtoMapper implements Function<JobSeekerProfile, Job
 
     public JobSeekerProfile apply(JobSeekerProfileRequest request, JobSeekerProfile profile) {
         profile.setBio(request.bio());
+        profile.setPhone(request.phone());
         profile.setProfession(request.profession());
         profile.setPersonalWebsiteUrl(request.personalWebsiteUrl());
         profile.setLinkedInUrl(request.linkedInUrl());
