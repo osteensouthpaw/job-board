@@ -6,6 +6,7 @@ import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobPost.enumerations.WorkMode;
 import com.omega.jobportal.user.data.UserResponse;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record JobPostResponse(
@@ -15,6 +16,7 @@ public record JobPostResponse(
         String location,
         String jobTitle,
         String description,
+        BigDecimal salary,
         JobType jobType,
         WorkMode workMode,
         ExperienceLevel experienceLevel,

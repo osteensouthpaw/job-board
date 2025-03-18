@@ -49,8 +49,8 @@ public class JobPost {
     @FullTextField
     private String description;
 
-    @Column(nullable = false, name = "hourly_rate")
-    private BigDecimal hourlyRate;
+    @Column(nullable = false, name = "salary")
+    private BigDecimal salary;
 
     @Column(name = "job_type")
     @Enumerated(EnumType.STRING)
@@ -77,7 +77,7 @@ public class JobPost {
         this.location = request.location();
         this.jobTitle = request.jobTitle();
         this.description = request.jobDescription();
-        this.hourlyRate = request.hourlyRate();
+        this.salary = request.hourlyRate();
         this.jobType = request.jobType();
         this.workMode = request.workMode();
         this.experienceLevel = request.experienceLevel();
