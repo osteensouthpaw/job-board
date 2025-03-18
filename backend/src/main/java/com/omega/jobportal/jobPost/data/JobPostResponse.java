@@ -1,6 +1,6 @@
 package com.omega.jobportal.jobPost.data;
 
-import com.omega.jobportal.company.Organization;
+import com.omega.jobportal.company.data.OrganizationResponse;
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobPost.enumerations.JobType;
 import com.omega.jobportal.jobPost.enumerations.WorkMode;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public record JobPostResponse(
         Long id,
         UserResponse user,
-        Organization organization,
+        OrganizationResponse organization,
         String location,
         String jobTitle,
         String description,

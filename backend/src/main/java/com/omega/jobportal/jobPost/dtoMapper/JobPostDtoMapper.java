@@ -1,21 +1,21 @@
 package com.omega.jobportal.jobPost.dtoMapper;
 
+import com.omega.jobportal.company.dtoMapper.OrganizationDtoMapper;
 import com.omega.jobportal.jobPost.JobPost;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
 import com.omega.jobportal.jobPost.data.JobPostUpdateRequest;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
     private final UserDtoMapper userDtoMapper;
-
-    public JobPostDtoMapper(UserDtoMapper userDtoMapper) {
-        this.userDtoMapper = userDtoMapper;
-    }
+    private final OrganizationDtoMapper organizationDtoMapper;
 
     @Override
     public JobPostResponse apply(JobPost jobPost) {
@@ -23,7 +23,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
         return new JobPostResponse(
                 jobPost.getId(),
                 userDtoMapper.apply(jobPost.getRecruiter()),
-                jobPost.getOrganization(),
+                organizationDtoMapper.apply(jobPost.getOrganization()),
                 jobPost.getLocation(),
                 jobPost.getJobTitle(),
                 jobPost.getDescription(),
