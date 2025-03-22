@@ -15,8 +15,8 @@ public class JobPostSpecificationBuilder {
             Optional.ofNullable(filterQuery.jobType())
                     .ifPresent(jobType -> predicates.add(criteriaBuilder.equal(root.get("jobType"), jobType)));
 
-            Optional.ofNullable(filterQuery.locationId())
-                    .ifPresent(locationId -> predicates.add(criteriaBuilder.equal(root.get("locationId"), locationId)));
+            Optional.ofNullable(filterQuery.location())
+                    .ifPresent(location -> predicates.add(criteriaBuilder.equal(root.get("location"), location)));
 
             Optional.ofNullable(filterQuery.workMode())
                     .ifPresent(workMode -> predicates.add(criteriaBuilder.equal(root.get("workMode"), workMode)));

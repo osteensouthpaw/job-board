@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public record JobPostFilterQuery(
         JobType jobType,
-        String locationId,
+        String location,
         WorkMode workMode,
         ExperienceLevel experienceLevel,
         LocalDateTime datePosted
