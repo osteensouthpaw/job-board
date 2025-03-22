@@ -26,7 +26,7 @@ public class JobPostController {
     @GetMapping
     public ResponseEntity<PageResponse<JobPostResponse>>
     findJobPosts(@RequestParam(value = "page", defaultValue = "0") int page,
-                 @RequestParam(value = "size", defaultValue = "10") int size,
+                 @RequestParam(value = "size", defaultValue = "20") int size,
                  JobPostFilterQuery filterQuery) {
         PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class JobPostController {
     @GetMapping("/search")
     public ResponseEntity<PageResponse<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery,
                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+                                                                    @RequestParam(value = "size", defaultValue = "20") int size) {
         PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
