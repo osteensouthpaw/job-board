@@ -34,7 +34,7 @@ public class JobPostService {
 
     public JobPostResponse createJobPost(JobPostRequest request) {
         AppUser recruiter = authService.getSession();
-        Organization organization = organizationService.findOrganizationById(request.companyId());
+        Organization organization = organizationService.findOrganizationByRecruiterId(recruiter.getId());
         JobPost jobPost = new JobPost(request, recruiter, organization);
         return jobPostDtoMapper.apply(jobPostRepository.save(jobPost));
     }

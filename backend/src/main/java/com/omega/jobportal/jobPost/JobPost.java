@@ -77,7 +77,7 @@ public class JobPost {
         this.location = request.location();
         this.jobTitle = request.jobTitle();
         this.description = request.jobDescription();
-        this.salary = request.hourlyRate();
+        this.salary = request.salary();
         this.jobType = request.jobType();
         this.workMode = request.workMode();
         this.experienceLevel = request.experienceLevel();

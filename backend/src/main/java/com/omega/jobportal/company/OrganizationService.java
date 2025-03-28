@@ -27,6 +27,11 @@ public class OrganizationService {
         return organizationDtoMapper.apply(organization);
     }
 
+    public Organization findOrganizationByRecruiterId(Long recruiterId) {
+        return organizationRepository.findOrganizationByRecruiterId(recruiterId)
+                .orElseThrow(() -> new ApiException("cannot find organization with that id", HttpStatus.NOT_FOUND));
+    }
+
     public OrganizationResponse updateOrganization(OrganizationRegistrationRequest request, Long companyId) {
         Organization organization = findOrganizationById(companyId);
         BusinessStream businessStream = businessStreamService.findById(request.businessStream());

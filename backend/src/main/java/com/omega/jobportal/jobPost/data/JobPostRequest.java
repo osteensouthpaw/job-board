@@ -9,23 +9,16 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record JobPostRequest(
-        @NotNull(message = "recruiter id is required")
-        Long recruiterId,
-
-        @NotNull
-        Long companyId,
-
         @Size(min = 3, max = 100, message = "The length must be between 3 - 100")
         @NotBlank
         String jobTitle,
 
-        @Size(min = 10, max = 1000, message = "The length must be between 3 - 100")
+        @Size(min = 10, max = 2000, message = "The length must be between 10 - 2000")
         @NotBlank(message = "jobDescription is required")
         String jobDescription,
 
-        @Digits(integer = 3, fraction = 2)
         @Positive
-        BigDecimal hourlyRate,
+        BigDecimal salary,
 
         @NotBlank
         String location,
