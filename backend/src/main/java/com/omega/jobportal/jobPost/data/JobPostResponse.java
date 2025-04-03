@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public record JobPostResponse(
         Long id,
-        UserResponse user,
+        UserResponse recruiter,
         OrganizationResponse organization,
         String location,
         String jobTitle,

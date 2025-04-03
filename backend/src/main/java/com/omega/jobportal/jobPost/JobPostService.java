@@ -96,5 +96,13 @@ public class JobPostService {
         return new PageResponse<>(jobPosts);
     }
 
-
+    public PageResponse<JobPostResponse> findJobPostsByRecruiterId(int page, int size) {
+        AppUser recruiter = authService.getSession();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobPostResponse> jobPosts = jobPostRepository
+                .findJobPostsByRecruiterId(recruiter.getId(), pageRequest)
+                .map(jobPostDtoMapper);
+        return new PageResponse<>(jobPosts);
+    }
 }

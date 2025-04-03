@@ -32,6 +32,13 @@ public class JobPostController {
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 
+    public ResponseEntity<PageResponse<JobPostResponse>>
+    findJobPostsByRecruiterId(@RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "20") int size) {
+        PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPostsByRecruiterId(page, size);
+        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<JobPostResponse> findById(@PathVariable Long id) {
         JobPostResponse jobPost = jobPostService.findJobById(id);
