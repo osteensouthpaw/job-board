@@ -21,6 +21,7 @@ public record JobPostResponse(
         WorkMode workMode,
         ExperienceLevel experienceLevel,
         boolean isOpen,
+        int totalApplications,
         LocalDateTime applicationDeadline,
         LocalDateTime createdAt
 ) {

@@ -2,6 +2,7 @@ package com.omega.jobportal.jobPost;
 
 
 import com.omega.jobportal.company.Organization;
+import com.omega.jobportal.jobApplication.JobApplication;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobPost.enumerations.JobType;
@@ -16,6 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -63,6 +66,12 @@ public class JobPost {
     @Column(name = "skill_level")
     @Enumerated(EnumType.STRING)
     private ExperienceLevel experienceLevel;
+
+    @OneToMany(
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
+            mappedBy = "jobPost"
+    )
+    private List<JobApplication> jobApplications = new ArrayList<>();
 
     @Column(name = "created_at")
     @CreatedDate

@@ -32,6 +32,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
                 jobPost.getWorkMode(),
                 jobPost.getExperienceLevel(),
                 isApplicationOpen,
+                jobPost.getJobApplications().size(),
                 jobPost.getApplicationDeadline(),
                 jobPost.getCreatedAt()
         );
