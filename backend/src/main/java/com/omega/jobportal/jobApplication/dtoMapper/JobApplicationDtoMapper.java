@@ -18,8 +18,8 @@ public class JobApplicationDtoMapper implements Function<JobApplication, JobAppl
     @Override
     public JobApplicationResponse apply(JobApplication application) {
         return new JobApplicationResponse(
-                userDtoMapper.apply(application.getId().getApplicant()),
-                jobPostDtoMapper.apply(application.getId().getJobPost()),
+                userDtoMapper.apply(application.getApplicant()),
+                jobPostDtoMapper.apply(application.getJobPost()),
                 application.getApplicationStatus(),
                 application.getResumeUrl(),
                 application.getCoverLetter(),

@@ -39,7 +39,7 @@ public class JobApplicationService {
 
         if (!isApplicationOpen)
             throw new ApiException("job application closed, applications no longer accepted", HttpStatus.BAD_REQUEST);
-        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
+        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant.getId(), jobPost.getId());
 
         return jobApplicationRepository.findById(jobApplicationKey)
                 .map(jobApplicationDtoMapper)
@@ -54,7 +54,7 @@ public class JobApplicationService {
     public void deleteJobApplication(Long jobPostId) {
         AppUser applicant = validatedApplicant();
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
-        JobApplicationKey jobApplicationId = new JobApplicationKey(applicant, jobPost);
+        JobApplicationKey jobApplicationId = new JobApplicationKey(applicant.getId(), jobPost.getId());
         jobApplicationRepository.findById(jobApplicationId)
                 .ifPresentOrElse(jobApplicationRepository::delete, () -> {
                     throw new ApiException("job application not found", HttpStatus.NOT_FOUND);
@@ -84,7 +84,7 @@ public class JobApplicationService {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
         AppUser loggedInUser = authenticationService.getSession();
         Page<JobApplicationResponse> jobApplications = jobApplicationRepository
-                .findJobPostApplicationsById(jobPostId, loggedInUser.getId(), pageRequest)
+                .findByJobPostIdAndRecruiterId(jobPostId, loggedInUser.getId(), pageRequest)
                 .map(jobApplicationDtoMapper);
         return new PageResponse<>(jobApplications);
     }
@@ -92,7 +92,7 @@ public class JobApplicationService {
     public void acceptApplication(Long applicantId, Long jobPostId) {
         AppUser applicant = userService.findUserById(applicantId);
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
-        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
+        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant.getId(), jobPost.getId());
         jobApplicationRepository.findById(jobApplicationKey)
                 .ifPresentOrElse(application -> {
                     application.setApplicationStatus(ApplicationStatus.ACCEPTED);
@@ -106,7 +106,7 @@ public class JobApplicationService {
     public void rejectApplication(Long applicantId, Long jobPostId) {
         AppUser applicant = userService.findUserById(applicantId);
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
-        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant, jobPost);
+        JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant.getId(), jobPost.getId());
         jobApplicationRepository.findById(jobApplicationKey)
                 .ifPresentOrElse(application -> {
                     application.setApplicationStatus(ApplicationStatus.REJECTED);

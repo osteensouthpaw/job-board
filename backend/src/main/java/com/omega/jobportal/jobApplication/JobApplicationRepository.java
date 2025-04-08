@@ -9,17 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 public interface JobApplicationRepository extends JpaRepository<JobApplication, JobApplicationKey> {
 
     @Query("""
-            SELECT ja FROM JobApplication ja
-             JOIN JobPost jb ON
-             ja.id.jobPost = jb
-             WHERE ja.id.jobPost.id = :id
-             AND jb.recruiter.id = :recruiterId
-            """)
-    Page<JobApplication> findJobPostApplicationsById(Long id, Long recruiterId, Pageable pageable);
-
-
-    @Query("""
-             SELECT ja FROM JobApplication ja WHERE ja.id.applicant.id = :applicantId
+             SELECT ja FROM JobApplication ja WHERE ja.applicant.id = :applicantId
             """)
     Page<JobApplication> findJobApplicationsByAppUserId(Long applicantId, Pageable pageable);
+
+    @Query("""
+                SELECT ja FROM JobApplication ja WHERE ja.jobPost.id = :jobPostId AND ja.jobPost.recruiter.id = :recruiterId
+            """)
+    Page<JobApplication> findByJobPostIdAndRecruiterId(Long jobPostId, Long recruiterId, Pageable pageable);
 }

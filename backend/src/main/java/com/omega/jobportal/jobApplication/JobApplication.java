@@ -1,6 +1,8 @@
 package com.omega.jobportal.jobApplication;
 
 import com.omega.jobportal.jobApplication.key.JobApplicationKey;
+import com.omega.jobportal.jobPost.JobPost;
+import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,16 @@ import java.time.LocalDateTime;
 public class JobApplication {
     @EmbeddedId
     private JobApplicationKey id;
+
+    @ManyToOne
+    @MapsId("applicantId")
+    @JoinColumn(name = "applicant_id")
+    private AppUser applicant;
+
+    @ManyToOne
+    @MapsId("jobPostId")
+    @JoinColumn(name = "job_post_id")
+    private JobPost jobPost;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "application_status", nullable = false)
