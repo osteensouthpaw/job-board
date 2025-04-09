@@ -22,6 +22,7 @@ public record JobPostResponse(
         ExperienceLevel experienceLevel,
         boolean isOpen,
         int totalApplications,
+        int totalLikes,
         LocalDateTime applicationDeadline,
         LocalDateTime createdAt
 ) {

@@ -64,4 +64,10 @@ public class JobPostController {
         PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
+
+    @PostMapping("{id}/like")
+    public ResponseEntity<Void> likePost(@PathVariable Long id) {
+        jobPostService.toggleLikePost(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -33,6 +33,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
                 jobPost.getExperienceLevel(),
                 isApplicationOpen,
                 jobPost.getJobApplications().size(),
+                jobPost.getLikedBy().size(),
                 jobPost.getApplicationDeadline(),
                 jobPost.getCreatedAt()
         );

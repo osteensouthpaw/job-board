@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -106,5 +107,17 @@ public class JobPostService {
                 .findJobPostsByRecruiterId(recruiter.getId(), pageRequest)
                 .map(jobPostDtoMapper);
         return new PageResponse<>(jobPosts);
+    }
+
+    public void toggleLikePost(Long postId) {
+        AppUser loggedInUser = authService.getSession();
+        JobPost jobPost = findJobPostById(postId);
+        Set<AppUser> likedBy = jobPost.getLikedBy();
+        likedBy.stream()
+                .filter(user -> Objects.equals(user.getId(), loggedInUser.getId()))
+                .findFirst()
+                .ifPresentOrElse(likedBy::remove, () -> likedBy.add(loggedInUser));
+        jobPost.setLikedBy(likedBy);
+        jobPostRepository.save(jobPost);
     }
 }

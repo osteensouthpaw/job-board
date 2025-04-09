@@ -18,7 +18,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -72,6 +74,14 @@ public class JobPost {
             mappedBy = "jobPost"
     )
     private List<JobApplication> jobApplications = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "job_post_likes",
+            joinColumns = @JoinColumn(name = "job_post_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id")
+    )
+    private Set<AppUser> likedBy = new HashSet<>();
 
     @Column(name = "created_at")
     @CreatedDate
