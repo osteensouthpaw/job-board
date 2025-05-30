@@ -16,6 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
+    //all job applications of the current logged-in user
+    @GetMapping
+    @PreAuthorize("hasRole('JOB_SEEKER')")
+    public ResponseEntity<PageResponse<JobApplicationResponse>>
+    jobApplicationsByApplicant(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size) {
+        var applications = jobApplicationService.findAllApplicationsByApplicant(page, size);
+        return ResponseEntity.ok(applications);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<JobApplicationResponse> createJobApplication(@RequestBody @Valid JobApplicationRequest request) {
@@ -30,25 +40,7 @@ public class JobApplicationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("{id}")
-    @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<PageResponse<JobApplicationResponse>>
-    jobApplicationsByPostId(@PathVariable Long id,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "10") int size) {
-        var applications = jobApplicationService.findJobPostApplicationsByJobPostId(id, page, size);
-        return ResponseEntity.ok(applications);
-    }
-
-    @GetMapping
-    @PreAuthorize("hasRole('JOB_SEEKER')")
-    public ResponseEntity<PageResponse<JobApplicationResponse>>
-    jobApplicationsByApplicant(@RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "10") int size) {
-        var applications = jobApplicationService.findAllApplicationsByApplicant(page, size);
-        return ResponseEntity.ok(applications);
-    }
-
+     
     @PatchMapping("/accept")
     public ResponseEntity<Void> acceptApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
         jobApplicationService.acceptApplication(applicantId, jobPostId);
