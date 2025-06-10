@@ -2,6 +2,9 @@ package com.omega.jobportal.jobSeekerProfile;
 
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
 import com.omega.jobportal.jobSeekerProfile.data.JobSeekerProfileRequest;
+import com.omega.jobportal.jobSeekerProfile.education.Education;
+import com.omega.jobportal.jobSeekerProfile.experience.Experience;
+import com.omega.jobportal.jobSeekerProfile.skills.SkillSet;
 import com.omega.jobportal.user.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +13,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Indexed
 @Getter
@@ -60,6 +65,24 @@ public class JobSeekerProfile {
     @Column(name = "experience_level", nullable = false)
     @Enumerated(EnumType.STRING)
     private ExperienceLevel experienceLevel;
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private List<Experience> experiences = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private List<SkillSet> skillSets = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private List<Education> educations = new ArrayList<>();
 
 
     public JobSeekerProfile(JobSeekerProfileRequest request, AppUser jobSeeker) {

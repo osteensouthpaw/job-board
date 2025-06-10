@@ -11,11 +11,13 @@ import com.omega.jobportal.utils.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class JobSeekerProfileService {
     private final JobSeekerProfileRepository jobSeekerProfileRepository;
     private final AuthenticationService authenticationService;
@@ -29,9 +31,8 @@ public class JobSeekerProfileService {
         return jobSeekerProfileDtoMapper.apply(jobSeekerProfile);
     }
 
-    public JobSeekerProfileResponse viewJobSeekerProfile() {
-        AppUser loggedInUser = authenticationService.getSession();
-        return jobSeekerProfileRepository.findJobSeekerProfileByJobSeekerId(loggedInUser.getId())
+    public JobSeekerProfileResponse viewJobSeekerProfile(Long userId) {
+        return jobSeekerProfileRepository.findJobSeekerProfileByJobSeekerId(userId)
                 .map(jobSeekerProfileDtoMapper)
                 .orElseThrow(() -> new ApiException("user profile not found", HttpStatus.NOT_FOUND));
     }

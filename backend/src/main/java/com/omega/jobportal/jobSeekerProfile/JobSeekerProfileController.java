@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/job-seeker")
+@RequestMapping("api/v1/job-seekers")
 @RequiredArgsConstructor
 public class JobSeekerProfileController {
     private final JobSeekerProfileService jobSeekerProfileService;
@@ -30,10 +30,9 @@ public class JobSeekerProfileController {
         return new ResponseEntity<>(jobSeekers, HttpStatus.OK);
     }
 
-
-    @GetMapping("/me")
-    public ResponseEntity<JobSeekerProfileResponse> viewProfile() {
-        var jobSeekerProfileResponse = jobSeekerProfileService.viewJobSeekerProfile();
+    @GetMapping("/{id}")
+    public ResponseEntity<JobSeekerProfileResponse> viewProfile(@PathVariable Long id) {
+        var jobSeekerProfileResponse = jobSeekerProfileService.viewJobSeekerProfile(id);
         return new ResponseEntity<>(jobSeekerProfileResponse, HttpStatus.OK);
     }
 

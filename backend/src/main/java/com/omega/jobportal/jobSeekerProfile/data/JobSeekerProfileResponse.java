@@ -1,13 +1,15 @@
 package com.omega.jobportal.jobSeekerProfile.data;
 
 import com.omega.jobportal.jobPost.enumerations.ExperienceLevel;
+import com.omega.jobportal.user.data.UserResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public record JobSeekerProfileResponse(
         Long id,
-        Long jobSeekerId,
+        UserResponse jobSeeker,
         BigDecimal currentAnnualSalary,
         String bio,
         String profession,
@@ -16,6 +18,9 @@ public record JobSeekerProfileResponse(
         String gitHubUrl,
         String twitterUrl,
         LocalDate dateOfBirth,
-        ExperienceLevel experienceLevel
+        ExperienceLevel experienceLevel,
+        List<ExperienceResponse> experiences,
+        List<SkillSetResponse> skills,
+        List<EducationResponse> educations
 ) {
 }
