@@ -32,6 +32,14 @@ public class JobPostController {
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<PageResponse<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery,
+                                                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                    @RequestParam(value = "size", defaultValue = "20") int size) {
+        PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
+        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
+
     public ResponseEntity<PageResponse<JobPostResponse>>
     findJobPostsByRecruiterId(@RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "20") int size) {
@@ -57,13 +65,6 @@ public class JobPostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<PageResponse<JobPostResponse>> searchJobs(@RequestParam(name = "searchQuery") String searchQuery,
-                                                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "20") int size) {
-        PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
-        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
-    }
 
     @PostMapping("{id}/like")
     public ResponseEntity<Void> likePost(@PathVariable Long id) {
