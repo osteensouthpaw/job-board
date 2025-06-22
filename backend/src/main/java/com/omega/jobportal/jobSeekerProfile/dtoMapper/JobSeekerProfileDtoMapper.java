@@ -30,6 +30,7 @@ public class JobSeekerProfileDtoMapper implements Function<JobSeekerProfile, Job
                 jobSeekerProfile.getGitHubUrl(),
                 jobSeekerProfile.getTwitterUrl(),
                 jobSeekerProfile.getDateOfBirth(),
+                jobSeekerProfile.getPhone(),
                 jobSeekerProfile.getExperienceLevel(),
                 jobSeekerProfile.getExperiences().stream().map(experienceDtoMapper).toList(),
                 jobSeekerProfile.getSkillSets().stream().map(skillSetDtoMapper).toList(),

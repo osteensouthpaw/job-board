@@ -18,6 +18,7 @@ public record JobSeekerProfileResponse(
         String gitHubUrl,
         String twitterUrl,
         LocalDate dateOfBirth,
+        String phone,
         ExperienceLevel experienceLevel,
         List<ExperienceResponse> experiences,
         List<SkillSetResponse> skills,

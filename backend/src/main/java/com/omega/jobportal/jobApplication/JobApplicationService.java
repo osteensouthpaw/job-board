@@ -45,6 +45,9 @@ public class JobApplicationService {
                 .map(jobApplicationDtoMapper)
                 .orElseGet(() -> {
                     JobApplication jobApplication = new JobApplication(jobApplicationKey, request.resumeUrl());
+                    jobApplication.setApplicant(applicant);
+                    jobApplication.setJobPost(jobPost);
+                    jobApplication.setCoverLetter(request.coverLetter());
                     JobApplication savedJobApplication = jobApplicationRepository.save(jobApplication);
                     //todo: send confirmation email;
                     return jobApplicationDtoMapper.apply(savedJobApplication);
