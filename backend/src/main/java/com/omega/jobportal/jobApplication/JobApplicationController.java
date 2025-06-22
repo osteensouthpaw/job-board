@@ -26,8 +26,14 @@ public class JobApplicationController {
         return ResponseEntity.ok(applications);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<JobApplicationResponse> findJobApplicationByJobPostIdAndLoggedInUser(@PathVariable Long id) {
+        JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndLoggedInUser(id);
+        return ResponseEntity.ok(jobApplication);
+    }
+
     @PostMapping
-    @PreAuthorize("hasRole('RECRUITER')")
+    @PreAuthorize("hasRole('JOB_SEEKER')")
     public ResponseEntity<JobApplicationResponse> createJobApplication(@RequestBody @Valid JobApplicationRequest request) {
         JobApplicationResponse jobApplication = jobApplicationService.createJobApplication(request);
         return new ResponseEntity<>(jobApplication, HttpStatus.CREATED);
@@ -40,7 +46,7 @@ public class JobApplicationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-     
+
     @PatchMapping("/accept")
     public ResponseEntity<Void> acceptApplication(@RequestParam Long applicantId, @RequestParam Long jobPostId) {
         jobApplicationService.acceptApplication(applicantId, jobPostId);

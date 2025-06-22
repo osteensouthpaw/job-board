@@ -89,6 +89,14 @@ public class JobApplicationService {
         return new PageResponse<>(jobApplications);
     }
 
+    @Transactional
+    public JobApplicationResponse findJobApplicationByJobPostIdAndLoggedInUser(Long jobPostId) {
+        return jobApplicationRepository
+                .findJobApplicationByJobPostIdAndApplicantId(jobPostId, validatedApplicant().getId())
+                .map(jobApplicationDtoMapper)
+                .orElse(null);
+    }
+
     public void acceptApplication(Long applicantId, Long jobPostId) {
         AppUser applicant = userService.findUserById(applicantId);
         JobPost jobPost = jobPostService.findJobPostById(jobPostId);
