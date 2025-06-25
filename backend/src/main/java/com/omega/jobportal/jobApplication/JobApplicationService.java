@@ -72,6 +72,7 @@ public class JobApplicationService {
         return new PageResponse<>(jobApplications);
     }
 
+    @Transactional
     public PageResponse<JobApplicationResponse> findAllApplicationsByApplicant(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "applicationDate");
         AppUser appUser = validatedApplicant();
