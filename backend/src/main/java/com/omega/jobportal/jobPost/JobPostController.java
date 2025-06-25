@@ -26,7 +26,7 @@ public class JobPostController {
     @GetMapping
     public ResponseEntity<PageResponse<JobPostResponse>>
     findJobPosts(@RequestParam(value = "page", defaultValue = "0") int page,
-                 @RequestParam(value = "size", defaultValue = "20") int size,
+                 @RequestParam(value = "size", defaultValue = "10") int size,
                  JobPostFilterQuery filterQuery) {
         PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
@@ -67,8 +67,21 @@ public class JobPostController {
 
 
     @PostMapping("{id}/like")
-    public ResponseEntity<Void> likePost(@PathVariable Long id) {
-        jobPostService.toggleLikePost(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Boolean> likePost(@PathVariable Long id) {
+        boolean isLiked = jobPostService.toggleLikePost(id);
+        return ResponseEntity.ok(isLiked);
+    }
+
+    @GetMapping("{id}/is-liked")
+    public ResponseEntity<Boolean> isLiked(@PathVariable Long id) {
+        boolean isLiked = jobPostService.isPostLiked(id);
+        return ResponseEntity.ok(isLiked);
+    }
+
+    @GetMapping("/liked-posts")
+    public ResponseEntity<PageResponse<JobPostResponse>> findLikedJobPosts(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                           @RequestParam(value = "size", defaultValue = "20") int size) {
+        PageResponse<JobPostResponse> likedJobPosts = jobPostService.findLikedJobPosts(page, size);
+        return ResponseEntity.ok(likedJobPosts);
     }
 }

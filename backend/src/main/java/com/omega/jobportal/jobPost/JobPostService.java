@@ -109,7 +109,7 @@ public class JobPostService {
         return new PageResponse<>(jobPosts);
     }
 
-    public void toggleLikePost(Long postId) {
+    public boolean toggleLikePost(Long postId) {
         AppUser loggedInUser = authService.getSession();
         JobPost jobPost = findJobPostById(postId);
         Set<AppUser> likedBy = jobPost.getLikedBy();
@@ -118,6 +118,24 @@ public class JobPostService {
                 .findFirst()
                 .ifPresentOrElse(likedBy::remove, () -> likedBy.add(loggedInUser));
         jobPost.setLikedBy(likedBy);
-        jobPostRepository.save(jobPost);
+        return jobPostRepository.save(jobPost).getLikedBy().stream()
+                .anyMatch(user -> Objects.equals(user.getId(), loggedInUser.getId()));
+    }
+
+    public PageResponse<JobPostResponse> findLikedJobPosts(int page, int size) {
+        AppUser loggedInUser = authService.getSession();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobPostResponse> likedJobPosts = jobPostRepository
+                .findLikedJobPostsByUserId(loggedInUser.getId(), pageRequest)
+                .map(jobPostDtoMapper);
+        return new PageResponse<>(likedJobPosts);
+    }
+
+    public boolean isPostLiked(Long jobPostId) {
+        AppUser loggedInUser = authService.getSession();
+        JobPost jobPost = findJobPostById(jobPostId);
+        return jobPost.getLikedBy().stream()
+                .anyMatch(user -> Objects.equals(user.getId(), loggedInUser.getId()));
     }
 }

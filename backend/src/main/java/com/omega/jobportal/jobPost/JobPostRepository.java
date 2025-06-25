@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface JobPostRepository extends JpaRepository<JobPost, Long>, JpaSpecificationExecutor<JobPost> {
 
-    @Query(
-            """
-                     SELECT jb FROM JobPost jb WHERE jb.recruiter.id = :recruiterId
-                    """
-    )
+    @Query("SELECT jb FROM JobPost jb WHERE jb.recruiter.id = :recruiterId")
     Page<JobPost> findJobPostsByRecruiterId(Long recruiterId, Pageable pageable);
+
+    @Query("SELECT jp FROM JobPost jp JOIN jp.likedBy u WHERE u.id = :userId")
+    Page<JobPost> findLikedJobPostsByUserId(Long userId, Pageable pageable);
 }
