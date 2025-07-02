@@ -94,9 +94,9 @@ public class JobApplicationService {
     }
 
     @Transactional
-    public JobApplicationResponse findJobApplicationByJobPostIdAndLoggedInUser(Long jobPostId) {
+    public JobApplicationResponse findJobApplicationByJobPostIdAndApplicantId(Long jobPostId, Long applicantId) {
         return jobApplicationRepository
-                .findJobApplicationByJobPostIdAndApplicantId(jobPostId, validatedApplicant().getId())
+                .findJobApplicationByJobPostIdAndApplicantId(jobPostId, applicantId)
                 .map(jobApplicationDtoMapper)
                 .orElse(null);
     }

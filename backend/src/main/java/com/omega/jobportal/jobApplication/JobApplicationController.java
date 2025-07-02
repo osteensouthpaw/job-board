@@ -26,9 +26,10 @@ public class JobApplicationController {
         return ResponseEntity.ok(applications);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<JobApplicationResponse> findJobApplicationByJobPostIdAndLoggedInUser(@PathVariable Long id) {
-        JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndLoggedInUser(id);
+    @GetMapping("/{jobPostId}/applicants/{applicantId}")
+    public ResponseEntity<JobApplicationResponse>
+    findJobApplicationByJobPostIdAndApplicantId(@PathVariable Long jobPostId, @PathVariable Long applicantId) {
+        JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndApplicantId(jobPostId, applicantId);
         return ResponseEntity.ok(jobApplication);
     }
 
