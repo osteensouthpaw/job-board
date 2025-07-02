@@ -1,6 +1,7 @@
 package com.omega.jobportal.user;
 
 import com.omega.jobportal.user.data.CompleteRegistrationRequest;
+import com.omega.jobportal.user.data.UpdateUserPasswordRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.utils.PageResponse;
 import jakarta.validation.Valid;
@@ -22,5 +23,10 @@ public class UserController {
     @PatchMapping("/onboarding")
     public UserResponse completeRegistration(@Valid @RequestBody CompleteRegistrationRequest request) {
         return userService.completeUserRegistration(request);
+    }
+
+    @PatchMapping("/update-password")
+    public void updatePassword(@Valid @RequestBody UpdateUserPasswordRequest request) {
+        userService.updatePassword(request);
     }
 }

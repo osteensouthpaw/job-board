@@ -1,6 +1,6 @@
 package com.omega.jobportal.user;
 
-import com.omega.jobportal.config.SecurityUser;
+import com.omega.jobportal.auth.AuthenticationService;
 import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +34,7 @@ public class UserService {
     private final VerificationCodeService verificationCodeService;
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final AuthenticationService authenticationService;
 
     @Transactional
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -87,7 +87,7 @@ public class UserService {
 
     @Transactional
     public void resetPassword(UpdateUserPasswordRequest request) {
-        confirmPassword(request.password(), request.confirmPassword());
+        isPasswordMatch(request.password(), request.confirmPassword());
         passwordResetTokenRepository.findByToken(request.passwordToken())
                 .ifPresentOrElse(token -> {
                             if (token.isExpired())
@@ -103,9 +103,8 @@ public class UserService {
     }
 
     public void updatePassword(UpdateUserPasswordRequest request) {
-        SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AppUser appUser = user.getUser();
-        confirmPassword(request.password(), request.confirmPassword());
+        AppUser appUser = authenticationService.getSession();
+        isPasswordMatch(request.password(), request.confirmPassword());
         boolean isValidPassword = passwordEncoder.matches(request.oldPassword(), appUser.getPassword());
         if (!isValidPassword)
             throw new ApiException("Wrong password", HttpStatus.BAD_REQUEST);
@@ -123,7 +122,7 @@ public class UserService {
                 .orElseThrow(() -> new ApiException("user with email".concat(email), HttpStatus.NOT_FOUND));
     }
 
-    private void confirmPassword(String password, String confirmPassword) {
+    private void isPasswordMatch(String password, String confirmPassword) {
         if (!password.equals(confirmPassword))
             throw new ApiException("Passwords do not match!", HttpStatus.BAD_REQUEST);
     }
