@@ -4,6 +4,7 @@ import com.omega.jobportal.auth.AuthenticationService;
 import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
+import com.omega.jobportal.jobSeekerProfile.JobSeekerProfileService;
 import com.omega.jobportal.user.data.*;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.passwordReset.PasswordResetToken;
@@ -12,11 +13,14 @@ import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccount;
 import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccountRepository;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
 import com.omega.jobportal.utils.PageResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +41,7 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final AuthenticationService authenticationService;
     private final UserConnectedAccountRepository userConnectedAccountRepository;
+    private final JobSeekerProfileService jobSeekerProfileService;
 
     @Transactional
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -143,5 +148,14 @@ public class UserService {
     public List<UserConnectedAccount> findUserConnectedAccounts() {
         AppUser loggedInUser = authenticationService.getSession();
         return userConnectedAccountRepository.findByAppUserId(loggedInUser.getId());
+    }
+
+    public void deleteUserAccount(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  Authentication authentication) {
+        AppUser loggedInUser = authenticationService.getSession();
+        jobSeekerProfileService.deleteJobSeekerProfileByJobSeekerId(loggedInUser.getId());
+        userRepository.deleteById(loggedInUser.getId());
+        authenticationService.logout(request, response, authentication);
     }
 }

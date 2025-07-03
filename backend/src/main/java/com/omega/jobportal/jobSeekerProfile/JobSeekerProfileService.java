@@ -31,6 +31,14 @@ public class JobSeekerProfileService {
         return jobSeekerProfileDtoMapper.apply(jobSeekerProfile);
     }
 
+    public void deleteJobSeekerProfileByJobSeekerId(Long userId) {
+        AppUser loggedInUser = authenticationService.getSession();
+        if (!loggedInUser.getId().equals(userId)) {
+            throw new ApiException("You can only delete your own profile", HttpStatus.FORBIDDEN);
+        }
+        jobSeekerProfileRepository.deleteJobSeekerProfileByJobSeekerId(userId);
+    }
+
     public JobSeekerProfileResponse viewJobSeekerProfile(Long userId) {
         return jobSeekerProfileRepository.findJobSeekerProfileByJobSeekerId(userId)
                 .map(jobSeekerProfileDtoMapper)
