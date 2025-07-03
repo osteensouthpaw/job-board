@@ -8,6 +8,8 @@ import com.omega.jobportal.user.data.*;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.passwordReset.PasswordResetToken;
 import com.omega.jobportal.user.passwordReset.PasswordResetTokenRepository;
+import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccount;
+import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccountRepository;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
 import com.omega.jobportal.utils.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.omega.jobportal.constants.Constants.NEW_USER_ACCOUNT_VERIFICATION;
 import static com.omega.jobportal.constants.Constants.RESET_PASSWORD;
@@ -32,6 +36,7 @@ public class UserService {
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final AuthenticationService authenticationService;
+    private final UserConnectedAccountRepository userConnectedAccountRepository;
 
     @Transactional
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -133,5 +138,10 @@ public class UserService {
     private void isPasswordMatch(String password, String confirmPassword) {
         if (!password.equals(confirmPassword))
             throw new ApiException("Passwords do not match!", HttpStatus.BAD_REQUEST);
+    }
+
+    public List<UserConnectedAccount> findUserConnectedAccounts() {
+        AppUser loggedInUser = authenticationService.getSession();
+        return userConnectedAccountRepository.findByAppUserId(loggedInUser.getId());
     }
 }
