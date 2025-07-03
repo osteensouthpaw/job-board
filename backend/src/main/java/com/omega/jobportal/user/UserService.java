@@ -4,10 +4,7 @@ import com.omega.jobportal.auth.AuthenticationService;
 import com.omega.jobportal.email.EmailService;
 import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
-import com.omega.jobportal.user.data.CompleteRegistrationRequest;
-import com.omega.jobportal.user.data.UpdateUserPasswordRequest;
-import com.omega.jobportal.user.data.UserRegistrationRequest;
-import com.omega.jobportal.user.data.UserResponse;
+import com.omega.jobportal.user.data.*;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.passwordReset.PasswordResetToken;
 import com.omega.jobportal.user.passwordReset.PasswordResetTokenRepository;
@@ -57,6 +54,17 @@ public class UserService {
                     return userDtoMapper.apply(userRepository.save(user));
                 })
                 .orElseThrow(() -> new ApiException("User not found, please create account first to continue", HttpStatus.NOT_FOUND));
+    }
+
+    public UserResponse updateUser(UserUpdateRequest request) {
+        AppUser loggedInUser = authenticationService.getSession();
+        return userRepository.findById(loggedInUser.getId())
+                .map(user -> {
+                    user.setFirstName(request.firstName());
+                    user.setLastName(request.lastName());
+                    user.setImageUrl(request.imageUrl());
+                    return userDtoMapper.apply(userRepository.save(user));
+                }).orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
     }
 
     private void sendVerificationEmail(AppUser user) {
