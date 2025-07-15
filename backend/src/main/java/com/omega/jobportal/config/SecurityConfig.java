@@ -121,7 +121,7 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         return _ -> {
             CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedOrigins(List.of("http://localhost:3000"));
+            config.setAllowedOrigins(List.of("http://localhost:3000", "https://job-portal-frontend-nine-black.vercel.app"));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
             config.setAllowedHeaders(List.of("*"));
             config.setAllowCredentials(true);
