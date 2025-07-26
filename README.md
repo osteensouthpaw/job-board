@@ -23,7 +23,6 @@ This project facilitates job postings and searches with features expected in mod
 - **Application Workflow:** Apply, track status, and receive email notifications.
 - **Like & Bookmark:** Save and like jobs for future reference.
 - **Rich Email Notifications:** Transactional and status emails via JTE templates.
-- **Scalable RESTful API:** Clean separation for frontend/backend or third-party use.
 - **Pagination & Sorting:** Efficient data handling for large datasets.
 - **Interactive API Docs:** Explore and test endpoints via Swagger UI.
 
