@@ -24,6 +24,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -50,6 +51,12 @@ public class SecurityConfig {
     private final String[] WHITE_LIST = new String[]{
             "/api/v1/job-posts",
             "/api/v1/job-posts/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**"
     };
 
     private final String[] JOB_SEEKER_ROUTES = new String[]{
@@ -74,7 +81,6 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
                         .successHandler(oauth2LoginSuccessHandler)
@@ -97,9 +103,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityContextRepository SecurityContextRepository() {
+    public SecurityContextRepository securityContextRepository() {
         return new HttpSessionSecurityContextRepository();
     }
+
 
     @Bean
     public SecurityContextLogoutHandler securityContextLogoutHandler() {
@@ -118,14 +125,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private CorsConfigurationSource corsConfigurationSource() {
-        return _ -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedOrigins(List.of("http://localhost:3000", "https://job-portal-frontend-nine-black.vercel.app"));
-            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
-            config.setAllowedHeaders(List.of("*"));
-            config.setAllowCredentials(true);
-            return config;
-        };
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://job-portal-frontend-nine-black.vercel.app"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
+
