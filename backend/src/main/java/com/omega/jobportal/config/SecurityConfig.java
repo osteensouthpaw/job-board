@@ -3,6 +3,7 @@ package com.omega.jobportal.config;
 import com.omega.jobportal.auth.CustomOauth2UserService;
 import com.omega.jobportal.auth.GlobalAuthenticationEntryPoint;
 import com.omega.jobportal.auth.Oauth2LoginSuccessHandler;
+import com.omega.jobportal.auth.jwt.CustomBearerTokenAccessDeniedHandler;
 import com.omega.jobportal.auth.jwt.JwtAuthenticationConverter;
 import com.omega.jobportal.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class SecurityConfig {
     private final CustomOauth2UserService customOauth2UserService;
     private final UserRepository userRepository;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
 
     private final String[] AUTH_ROUTES = new String[]{
             "/api/v1/auth/**",
@@ -88,7 +90,10 @@ public class SecurityConfig {
                 customizer.authenticationEntryPoint(globalAuthenticationEntryPoint)
         );
         http.oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter))
+                        .accessDeniedHandler(customBearerTokenAccessDeniedHandler)
+                        .authenticationEntryPoint(globalAuthenticationEntryPoint))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));

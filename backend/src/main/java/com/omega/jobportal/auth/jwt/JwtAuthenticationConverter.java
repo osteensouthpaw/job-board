@@ -2,7 +2,6 @@ package com.omega.jobportal.auth.jwt;
 
 import com.omega.jobportal.config.SecurityUser;
 import com.omega.jobportal.exception.ApiException;
-import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
@@ -23,11 +22,11 @@ public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthen
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
         String userId = jwt.getClaimAsString("userId");
-
-        AppUser user = userRepository.findById(Long.parseLong(userId))
+        SecurityUser securityUser = userRepository
+                .findById(Long.parseLong(userId))
+                .map(SecurityUser::new)
                 .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
 
-        SecurityUser securityUser = new SecurityUser(user);
         Collection<? extends GrantedAuthority> authorities = securityUser.getAuthorities();
 
         return new JwtAuthenticationToken(jwt, authorities, securityUser.getUsername()) {

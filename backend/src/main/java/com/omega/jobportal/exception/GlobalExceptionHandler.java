@@ -3,10 +3,13 @@ package com.omega.jobportal.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -70,6 +73,41 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidBearerTokenException.class)
+    public ResponseEntity<ApiError> handleException(InvalidBearerTokenException exception,
+                                                    HttpServletRequest request) {
+        var apiError = new ApiError(
+                exception.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleException(AccessDeniedException exception,
+                                                    HttpServletRequest request) {
+        var apiError = new ApiError(
+                exception.getMessage().concat(" You are not allowed to access this resource"),
+                HttpStatus.FORBIDDEN.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> ExceptionHandler(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                ex.getMessage(),
+                HttpStatus.METHOD_NOT_ALLOWED.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(AuthenticationException.class)

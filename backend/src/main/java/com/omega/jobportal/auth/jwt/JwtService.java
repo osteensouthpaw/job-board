@@ -34,7 +34,7 @@ public class JwtService {
                 .subject(authentication.getName())
                 .expiresAt(Instant.now().plus(expiresAt, ChronoUnit.HOURS))
                 .claim("userId", user.getId())
-                .claim("roles", authorities)
+                .claim("role", authorities.getFirst())
                 .build();
 
         return jwtEncoder
