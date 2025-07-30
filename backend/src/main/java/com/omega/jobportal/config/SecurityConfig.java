@@ -3,6 +3,7 @@ package com.omega.jobportal.config;
 import com.omega.jobportal.auth.CustomOauth2UserService;
 import com.omega.jobportal.auth.GlobalAuthenticationEntryPoint;
 import com.omega.jobportal.auth.Oauth2LoginSuccessHandler;
+import com.omega.jobportal.auth.jwt.JwtAuthenticationConverter;
 import com.omega.jobportal.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,14 +15,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,6 +40,7 @@ public class SecurityConfig {
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final CustomOauth2UserService customOauth2UserService;
     private final UserRepository userRepository;
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
     private final String[] AUTH_ROUTES = new String[]{
             "/api/v1/auth/**",
@@ -79,17 +79,18 @@ public class SecurityConfig {
                 .requestMatchers(DELETE, JOB_SEEKER_ROUTES).hasRole(JOB_SEEKER.name())
                 .requestMatchers(RECRUITER_ROUTES).hasRole(RECRUITER.name())
                 .anyRequest().authenticated());
-
-        http.csrf(AbstractHttpConfigurer::disable)
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
-                        .successHandler(oauth2LoginSuccessHandler)
-                );
-
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
+                .successHandler(oauth2LoginSuccessHandler)
+        );
         http.exceptionHandling(customizer ->
                 customizer.authenticationEntryPoint(globalAuthenticationEntryPoint)
         );
-
+        http.oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
@@ -100,17 +101,6 @@ public class SecurityConfig {
         var authenticationProvider = new DaoAuthenticationProvider(passwordEncoder());
         authenticationProvider.setUserDetailsService(userDetailsService());
         return new ProviderManager(authenticationProvider);
-    }
-
-    @Bean
-    public SecurityContextRepository securityContextRepository() {
-        return new HttpSessionSecurityContextRepository();
-    }
-
-
-    @Bean
-    public SecurityContextLogoutHandler securityContextLogoutHandler() {
-        return new SecurityContextLogoutHandler();
     }
 
     @Bean

@@ -6,11 +6,8 @@ import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.data.UserUpdateRequest;
 import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccount;
 import com.omega.jobportal.utils.PageResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,9 +45,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-account")
-    public void deleteAccount(HttpServletRequest request,
-                              HttpServletResponse response,
-                              Authentication authentication) {
-        userService.deleteUserAccount(request, response, authentication);
+    public void deleteAccount() {
+        userService.deleteUserAccount();
     }
 }

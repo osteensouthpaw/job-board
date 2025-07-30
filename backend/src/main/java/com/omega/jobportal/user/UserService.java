@@ -13,14 +13,11 @@ import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccount;
 import com.omega.jobportal.user.userConnectedAccount.UserConnectedAccountRepository;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
 import com.omega.jobportal.utils.PageResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,7 +134,7 @@ public class UserService {
 
     public AppUser findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new ApiException("user with email".concat(email), HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ApiException("cannot find user with email".concat(email), HttpStatus.NOT_FOUND));
     }
 
     private void isPasswordMatch(String password, String confirmPassword) {
@@ -150,12 +147,9 @@ public class UserService {
         return userConnectedAccountRepository.findByAppUserId(loggedInUser.getId());
     }
 
-    public void deleteUserAccount(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  Authentication authentication) {
+    public void deleteUserAccount() {
         AppUser loggedInUser = authenticationService.getSession();
         jobSeekerProfileService.deleteJobSeekerProfileByJobSeekerId(loggedInUser.getId());
         userRepository.deleteById(loggedInUser.getId());
-        authenticationService.logout(request, response, authentication);
     }
 }

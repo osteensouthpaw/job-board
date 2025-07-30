@@ -8,13 +8,10 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,22 +24,13 @@ public class AuthenticationController {
     private final VerificationCodeService verificationCodeService;
 
     @PostMapping("/login")
-    public void login(@RequestBody @Valid AuthRequest authRequest,
-                      HttpServletResponse response,
-                      HttpServletRequest request) {
-        authenticationService.login(authRequest, request, response);
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest) {
+        return ResponseEntity.ok().body(authenticationService.login(authRequest));
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRegistrationRequest request) {
         return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/logout")
-    public void logout(HttpServletRequest request,
-                       HttpServletResponse response,
-                       Authentication authentication) {
-        authenticationService.logout(request, response, authentication);
     }
 
     @GetMapping("/me")
