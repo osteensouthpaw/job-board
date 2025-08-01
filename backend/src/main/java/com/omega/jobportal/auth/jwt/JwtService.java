@@ -1,44 +1,50 @@
 package com.omega.jobportal.auth.jwt;
 
-import com.omega.jobportal.config.SecurityUser;
+import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.user.AppUser;
+import com.omega.jobportal.user.UserRepository;
+import com.omega.jobportal.user.data.UserResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
     private final JwtEncoder jwtEncoder;
+    private final UserRepository userRepository;
+    private final JwtDecoder jwtDecoder;
 
-    public String createToken(Authentication authentication) {
-        SecurityUser authenticatedUser = (SecurityUser) authentication.getPrincipal();
-        AppUser user = authenticatedUser.getUser();
-        List<String> authorities = authentication
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority).toList();
+    public String generateAccessToken(UserResponse user) {
+        long expiresAt = 1; //1hr
+        return generateAccessToken(user, expiresAt);
+    }
 
-        long expiresAt = 2;
+    public String generateRefreshToken(UserResponse userResponse) {
+        long expiresAt = 24 * 14; //2wks
+        return generateAccessToken(userResponse, expiresAt);
+    }
+
+    private String generateAccessToken(UserResponse user, long expirationDuration) {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
-                .subject(authentication.getName())
-                .expiresAt(Instant.now().plus(expiresAt, ChronoUnit.HOURS))
-                .claim("userId", user.getId())
-                .claim("role", authorities.getFirst())
+                .subject(user.email())
+                .expiresAt(Instant.now().plus(expirationDuration, ChronoUnit.MINUTES))
+                .claim("userId", user.id())
+                .claim("role", user.userType())
                 .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
 
-        return jwtEncoder
-                .encode(JwtEncoderParameters.from(claims))
-                .getTokenValue();
+    public AppUser validateTokenAndReturnUser(String refreshToken) {
+        Jwt jwt = jwtDecoder.decode(refreshToken);
+        String userId = jwt.getClaimAsString("userId");
+        return userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new ApiException("User not found", HttpStatus.UNAUTHORIZED));
     }
 }

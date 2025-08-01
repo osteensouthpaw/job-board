@@ -1,0 +1,23 @@
+# Maven build output
+
+# Git repo files
+.git
+.gitignore
+
+# IDE/editor config files
+*.iml
+.idea/
+*.vscode/
+*.swp
+
+# OS/Editor temp files
+.DS_Store
+Thumbs.db
+
+# Docker-related files (only include Dockerfile if not needed in image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs or other runtime data
+*.log

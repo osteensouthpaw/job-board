@@ -33,3 +33,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+application-dev.yml
+application-prod.yml
+application-test.yml
+
+.jetclient

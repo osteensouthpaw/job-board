@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -108,6 +109,17 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+    
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public ResponseEntity<ApiError> ExceptionHandler(MissingRequestCookieException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthenticationException.class)

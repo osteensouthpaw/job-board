@@ -28,18 +28,16 @@ public class AuthenticationService {
                 .unauthenticated(authRequest.email(), authRequest.password());
         var authentication = authenticationManager.authenticate(authToken);
         SecurityUser authenticatedUser = (SecurityUser) authentication.getPrincipal();
-        String token = jwtService.createToken(authentication);
         UserResponse userResponse = userDtoMapper.apply(authenticatedUser.getUser());
+        String token = jwtService.generateAccessToken(userResponse);
         return new AuthResponse(userResponse, token);
     }
 
     public AppUser getSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated() ||
-                authentication.getPrincipal().equals("anonymousUser")) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
             throw new ApiException("No authenticated user found", HttpStatus.UNAUTHORIZED);
-        }
 
         SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         return securityUser.getUser();

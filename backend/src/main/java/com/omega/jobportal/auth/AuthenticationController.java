@@ -1,5 +1,6 @@
 package com.omega.jobportal.auth;
 
+import com.omega.jobportal.auth.jwt.JwtService;
 import com.omega.jobportal.user.AppUser;
 import com.omega.jobportal.user.UserService;
 import com.omega.jobportal.user.data.ForgotPasswordRequest;
@@ -8,6 +9,8 @@ import com.omega.jobportal.user.data.UserRegistrationRequest;
 import com.omega.jobportal.user.data.UserResponse;
 import com.omega.jobportal.user.dtoMapper.UserDtoMapper;
 import com.omega.jobportal.user.verificationCode.VerificationCodeService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +25,28 @@ public class AuthenticationController {
     private final UserService userService;
     private final UserDtoMapper userDtoMapper;
     private final VerificationCodeService verificationCodeService;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest) {
-        return ResponseEntity.ok().body(authenticationService.login(authRequest));
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest, HttpServletResponse response) {
+        AuthResponse authResponse = authenticationService.login(authRequest);
+        String refreshToken = jwtService.generateRefreshToken(authResponse.userResponse());
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("api/v1/auth/refresh");
+        cookie.setMaxAge(24 * 14 * 60 * 60);  //2wks
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().body(authResponse);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@CookieValue(value = "refreshToken") String refreshToken) {
+        AppUser user = jwtService.validateTokenAndReturnUser(refreshToken);
+        UserResponse userResponse = userDtoMapper.apply(user);
+        String accessToken = jwtService.generateAccessToken(userResponse);
+        AuthResponse authResponse = new AuthResponse(userResponse, accessToken);
+        return ResponseEntity.ok().body(authResponse);
     }
 
     @PostMapping("/register")
