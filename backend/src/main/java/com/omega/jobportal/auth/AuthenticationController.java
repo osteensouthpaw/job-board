@@ -40,6 +40,16 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(authResponse);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@CookieValue(value = "refreshToken") String refreshToken) {
         AppUser user = jwtService.validateTokenAndReturnUser(refreshToken);
