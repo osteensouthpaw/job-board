@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -80,13 +81,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleException(InvalidBearerTokenException exception,
                                                     HttpServletRequest request) {
         var apiError = new ApiError(
-                exception.getMessage(),
+                "Invalid bearer token",
                 HttpStatus.UNAUTHORIZED.value(),
                 LocalDateTime.now(),
                 request.getRequestURI()
         );
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(BadJwtException.class)
+    public ResponseEntity<ApiError> handleException(BadJwtException exception,
+                                                    HttpServletRequest request) {
+        var apiError = new ApiError(
+                "JWT rejected: Invalid signature",
+                HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleException(AccessDeniedException exception,
@@ -110,7 +124,7 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(apiError, HttpStatus.METHOD_NOT_ALLOWED);
     }
-    
+
     @ExceptionHandler(MissingRequestCookieException.class)
     public ResponseEntity<ApiError> ExceptionHandler(MissingRequestCookieException ex, HttpServletRequest request) {
         ApiError apiError = new ApiError(
@@ -127,6 +141,17 @@ public class GlobalExceptionHandler {
         ApiError apiError = new ApiError(
                 ex.getMessage(),
                 HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> ExceptionHandler(Exception ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 LocalDateTime.now(),
                 request.getRequestURI()
         );
