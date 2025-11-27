@@ -147,6 +147,7 @@ public class UserService {
         return userConnectedAccountRepository.findByAppUserId(loggedInUser.getId());
     }
 
+    @Transactional
     public void deleteUserAccount() {
         AppUser loggedInUser = authenticationService.getSession();
         jobSeekerProfileService.deleteJobSeekerProfileByJobSeekerId(loggedInUser.getId());
