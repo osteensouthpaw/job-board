@@ -16,10 +16,9 @@ public record JobPostUpdateRequest(
         @Size(min = 10, max = 1000, message = "The length must be between 3 - 100")
         @NotBlank(message = "jobDescription is required")
         String jobDescription,
-
-        @Digits(integer = 3, fraction = 2)
+        
         @Positive
-        BigDecimal hourlyRate,
+        BigDecimal salary,
 
         @NotBlank(message = "location is required")
         String location,

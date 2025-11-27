@@ -42,7 +42,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
     public JobPost apply(JobPostUpdateRequest request, JobPost jobPost) {
         jobPost.setJobTitle(request.jobTitle());
         jobPost.setDescription(request.jobDescription());
-        jobPost.setSalary(request.hourlyRate());
+        jobPost.setSalary(request.salary());
         jobPost.setApplicationDeadline(request.applicationDeadline());
         jobPost.setExperienceLevel(request.experienceLevel());
         jobPost.setJobType(request.jobType());
