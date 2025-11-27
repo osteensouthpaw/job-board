@@ -29,6 +29,11 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest, HttpServletResponse response) {
+        AuthResponse authResponse = authenticateUser(authRequest, response);
+        return ResponseEntity.ok().body(authResponse);
+    }
+
+    private AuthResponse authenticateUser(AuthRequest authRequest, HttpServletResponse response) {
         AuthResponse authResponse = authenticationService.login(authRequest);
         String refreshToken = jwtService.generateRefreshToken(authResponse.userResponse());
         Cookie cookie = new Cookie("refreshToken", refreshToken);
@@ -37,7 +42,7 @@ public class AuthenticationController {
         cookie.setMaxAge(24 * 14 * 60 * 60);  //2wks
         cookie.setSecure(true);
         response.addCookie(cookie);
-        return ResponseEntity.ok().body(authResponse);
+        return authResponse;
     }
 
     @PostMapping("/logout")
@@ -60,8 +65,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRegistrationRequest request) {
-        return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
+    public ResponseEntity<AuthResponse> createUser(@RequestBody @Valid UserRegistrationRequest request, HttpServletResponse response) {
+        UserResponse userResponse = userService.createUser(request);
+        AuthResponse authResponse = authenticateUser(new AuthRequest(userResponse.email(), request.password()), response);
+        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/me")
