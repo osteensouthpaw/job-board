@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/job-seeker/skills")
+@RequestMapping("/api/v1/job-seeker/skills")
 public class SkillSetController {
     private final SkillSetService skillSetService;
 
