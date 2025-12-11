@@ -51,7 +51,9 @@ public class AppUser {
         separateNames(request.name());
         this.password = encodedPassword;
         this.email = request.email();
-        this.userType = UserType.PENDING;
+        this.userType = request.userType();
+        this.gender = request.gender();
+        this.imageUrl = request.imageUrl();
     }
 
     public AppUser(String name, String email) {
