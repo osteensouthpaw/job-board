@@ -8,9 +8,9 @@ import java.time.LocalDate;
 
 
 public record JobSeekerProfileRequest(
-        @Size(min = 100, max = 1000)
+        @Size(min = 10, max = 1000)
         String bio,
-        
+
         String phone,
 
         @Size(min = 3, max = 100)
