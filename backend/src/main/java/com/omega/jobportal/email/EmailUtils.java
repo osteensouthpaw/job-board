@@ -1,5 +1,7 @@
 package com.omega.jobportal.email;
 
+import java.util.Locale;
+
 public class EmailUtils {
     private final static String host = "http://localhost:8080";
 
@@ -11,7 +13,7 @@ public class EmailUtils {
     }
 
     public static String getResetPasswordEmailMessage(String name, String resetPasswordCode) {
-        String message = "Hello " + name + "\n \n Here is your reset password link. Please click the link below to verify your accout." +
+        String message = "Hello " + name.toLowerCase(Locale.ENGLISH) + "\n \n Here is your password reset code. Please use the code below to verify your account." +
                 "\n \n Please note that the link will expire in 15 minutes \n \n".concat(getResetPasswordURL(resetPasswordCode));
         return message;
     }
@@ -21,6 +23,6 @@ public class EmailUtils {
     }
 
     private static String getResetPasswordURL(String token) {
-        return host.concat("/api/v1/users/reset-password?token=".concat(token));
+        return token;
     }
 }
