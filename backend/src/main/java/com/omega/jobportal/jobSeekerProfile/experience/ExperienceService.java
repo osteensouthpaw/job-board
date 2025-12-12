@@ -56,11 +56,13 @@ public class ExperienceService {
     public void deleteExperience(Long id) {
         AppUser loggedInUser = authenticationService.getSession();
         experienceRepository.findById(id)
-                .ifPresent(experience -> {
+                .ifPresentOrElse(experience -> {
                     boolean isExperienceOwner = Objects.equals(experience.getJobSeekerProfile().getJobSeeker().getId(), loggedInUser.getId());
                     if (!isExperienceOwner)
                         throw new ApiException("you can only delete your own experience", HttpStatus.FORBIDDEN);
                     experienceRepository.delete(experience);
+                }, () -> {
+                    throw new ApiException("experience not found", HttpStatus.NOT_FOUND);
                 });
     }
 }
