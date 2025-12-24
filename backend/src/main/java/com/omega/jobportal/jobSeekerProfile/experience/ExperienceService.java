@@ -45,12 +45,9 @@ public class ExperienceService {
                 .orElseThrow(() -> new ApiException("experience detail not found", HttpStatus.NOT_FOUND));
     }
 
-    public List<ExperienceResponse> viewExperiences(Long jobSeekerId) {
+    public List<ExperienceResponse> findExperiencesByJobSeekerId(Long jobSeekerId) {
         JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
-        return experienceRepository.findExperienceByJobSeekerId(jobSeekerProfile.getJobSeeker().getId())
-                .stream()
-                .map(experienceDtoMapper)
-                .toList();
+        return jobSeekerProfile.getExperiences().stream().map(experienceDtoMapper).toList();
     }
 
     public void deleteExperience(Long id) {
@@ -64,5 +61,13 @@ public class ExperienceService {
                 }, () -> {
                     throw new ApiException("experience not found", HttpStatus.NOT_FOUND);
                 });
+    }
+
+    public ExperienceResponse findExperienceById(Long jobSeekerId, Long experienceId) {
+        JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
+        return jobSeekerProfile.getExperiences().stream()
+                .filter(exp -> exp.getId().equals(experienceId))
+                .findFirst().map(experienceDtoMapper)
+                .orElseThrow(() -> new ApiException("experience not found", HttpStatus.NOT_FOUND));
     }
 }

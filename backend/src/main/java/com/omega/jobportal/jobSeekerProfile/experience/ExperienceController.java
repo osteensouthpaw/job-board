@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/job-seeker/experiences")
+@RequestMapping("api/v1/job-seeker/{jobSeekerId}/experiences")
 public class ExperienceController {
     private final ExperienceService experienceService;
 
@@ -30,8 +30,14 @@ public class ExperienceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<ExperienceResponse>> viewExperiences(@PathVariable Long id) {
-        List<ExperienceResponse> experienceResponses = experienceService.viewExperiences(id);
+        List<ExperienceResponse> experienceResponses = experienceService.findExperiencesByJobSeekerId(id);
         return new ResponseEntity<>(experienceResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("{jobSeekerId}/{experienceId}")
+    public ResponseEntity<ExperienceResponse> findExperienceById(@PathVariable Long jobSeekerId, @PathVariable Long experienceId) {
+        ExperienceResponse experienceResponse = experienceService.findExperienceById(jobSeekerId, experienceId);
+        return new ResponseEntity<>(experienceResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
