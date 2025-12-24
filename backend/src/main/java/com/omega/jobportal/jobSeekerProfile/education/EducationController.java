@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/job-seeker/education")
+@RequestMapping("api/v1/job-seeker/{jobSeekerId}/education")
 public class EducationController {
     private final EducationService educationService;
 
@@ -28,10 +28,16 @@ public class EducationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<EducationResponse>> viewEducationDetails(@PathVariable Long id) {
-        List<EducationResponse> educationResponses = educationService.viewEducationDetails(id);
+    @GetMapping("/{jobSeekerId}")
+    public ResponseEntity<List<EducationResponse>> viewEducationDetails(@PathVariable Long jobSeekerId) {
+        List<EducationResponse> educationResponses = educationService.findEducationsByJobSeekerId(jobSeekerId);
         return new ResponseEntity<>(educationResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/{jobSeekerId}/{educationId}")
+    public ResponseEntity<EducationResponse> findEducationById(@PathVariable Long jobSeekerId, @PathVariable Long educationId) {
+        EducationResponse educationResponse = educationService.findEducationById(jobSeekerId, educationId);
+        return new ResponseEntity<>(educationResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

@@ -44,7 +44,7 @@ public class EducationService {
                 });
     }
 
-    public List<EducationResponse> viewEducationDetails(Long id) {
+    public List<EducationResponse> findEducationsByJobSeekerId(Long id) {
         JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(id);
         return educationRepository.findEducationByJobSeekerId(jobSeekerProfile.getJobSeeker().getId())
                 .stream().map(educationDtoMapper)
@@ -66,5 +66,12 @@ public class EducationService {
                     return educationDtoMapper.apply(savedUpdatedEducation);
                 })
                 .orElseThrow(() -> new ApiException("Education detail not found", HttpStatus.NOT_FOUND));
+    }
+
+    public EducationResponse findEducationById(Long jobSeekerId, Long educationId) {
+        JobSeekerProfile profile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
+        return profile.getEducations().stream().filter(education -> education.getId().equals(educationId))
+                .findFirst().map(educationDtoMapper)
+                .orElseThrow(() -> new ApiException("education not found", HttpStatus.NOT_FOUND));
     }
 }
