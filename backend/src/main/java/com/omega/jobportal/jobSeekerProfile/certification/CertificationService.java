@@ -68,9 +68,8 @@ public class CertificationService {
         );
     }
 
-    public List<CertificationResponse> findAllCertificationsByJobSeekerId() {
-        AppUser loggedInUser = authenticationService.getSession();
-        JobSeekerProfile profile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(loggedInUser.getId());
+    public List<CertificationResponse> findAllCertificationsByJobSeekerId(Long jobSeekerId) {
+        JobSeekerProfile profile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
         return certificationRepository.findByJobSeekerProfileId(profile.getId())
                 .stream().map(certificationDtoMapper).toList();
     }

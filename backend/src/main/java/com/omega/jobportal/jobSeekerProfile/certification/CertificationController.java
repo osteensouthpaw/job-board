@@ -12,13 +12,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/job-seeker/certifications")
+@RequestMapping("api/v1/job-seeker/{jobSeekerId}/certifications")
 public class CertificationController {
     private final CertificationService certificationService;
 
-    @GetMapping
-    public ResponseEntity<List<CertificationResponse>> findAllCertifications() {
-        List<CertificationResponse> certifications = certificationService.findAllCertificationsByJobSeekerId();
+    @GetMapping("{jobSeekerId}")
+    public ResponseEntity<List<CertificationResponse>> findAllCertifications(@PathVariable Long jobSeekerId) {
+        List<CertificationResponse> certifications = certificationService.findAllCertificationsByJobSeekerId(jobSeekerId);
         return new ResponseEntity<>(certifications, HttpStatus.OK);
     }
 
