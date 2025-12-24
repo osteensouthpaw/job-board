@@ -7,11 +7,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/job-seeker/skills")
+@RequestMapping("/api/v1/job-seeker/{jobSeekerId}/skills")
 public class SkillSetController {
     private final SkillSetService skillSetService;
+
+    @GetMapping("{jobSeekerId}")
+    public ResponseEntity<List<SkillSetResponse>> findSkillsByJobSeekerId(@PathVariable Long jobSeekerId) {
+        List<SkillSetResponse> skills = skillSetService.findSkillsByJobseekerId(jobSeekerId);
+        return ResponseEntity.ok(skills);
+    }
+
+    @GetMapping("{jobSeekerId}/{skillId}")
+    public ResponseEntity<SkillSetResponse> findSkillById(@PathVariable Long jobSeekerId, @PathVariable Long skillId) {
+        SkillSetResponse skillSetResponse = skillSetService.findSkillById(jobSeekerId, skillId);
+        return ResponseEntity.ok(skillSetResponse);
+    }
 
     @PostMapping
     public ResponseEntity<SkillSetResponse> saveSkillSet(@RequestBody SkillSetRequest request) {
