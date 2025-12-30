@@ -11,17 +11,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/job-seeker/{jobSeekerId}/skills")
+@RequestMapping("/api/v1/job-seekers/{jobSeekerId}/skills")
 public class SkillSetController {
     private final SkillSetService skillSetService;
 
-    @GetMapping("{jobSeekerId}")
+    @GetMapping
     public ResponseEntity<List<SkillSetResponse>> findSkillsByJobSeekerId(@PathVariable Long jobSeekerId) {
         List<SkillSetResponse> skills = skillSetService.findSkillsByJobseekerId(jobSeekerId);
         return ResponseEntity.ok(skills);
     }
 
-    @GetMapping("{jobSeekerId}/{skillId}")
+    @GetMapping("{skillId}")
     public ResponseEntity<SkillSetResponse> findSkillById(@PathVariable Long jobSeekerId, @PathVariable Long skillId) {
         SkillSetResponse skillSetResponse = skillSetService.findSkillById(jobSeekerId, skillId);
         return ResponseEntity.ok(skillSetResponse);
