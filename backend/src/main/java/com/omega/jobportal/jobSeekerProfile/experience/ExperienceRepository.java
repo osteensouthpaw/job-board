@@ -8,5 +8,5 @@ import java.util.List;
 public interface ExperienceRepository extends JpaRepository<Experience, Long> {
 
     @Query("SELECT e FROM Experience e WHERE e.jobSeekerProfile.jobSeeker.id = :id ORDER BY e.endDate DESC")
-    List<Experience> findExperienceByJobSeekerId(Long id);
+    List<Experience> findExperiencesByJobSeekerId(Long id);
 }

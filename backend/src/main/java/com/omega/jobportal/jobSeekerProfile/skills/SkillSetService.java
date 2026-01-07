@@ -58,15 +58,11 @@ public class SkillSetService {
     }
 
     public List<SkillSetResponse> findSkillsByJobseekerId(Long jobSeekerId) {
-        JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
-        return jobSeekerProfile.getSkillSets().stream().map(skillSetDtoMapper).toList();
+        return skillSetRepository.findSkillSetsByJobSeekerId(jobSeekerId).stream().map(skillSetDtoMapper).toList();
     }
 
     public SkillSetResponse findSkillById(Long jobSeekerId, Long skillId) {
-        JobSeekerProfile profile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
-        return profile.getSkillSets().stream()
-                .filter(skillSet -> skillSet.getId().equals(skillId)).findFirst()
-                .map(skillSetDtoMapper)
+        return skillSetRepository.findById(skillId).map(skillSetDtoMapper)
                 .orElseThrow(() -> new ApiException("skill set not found", HttpStatus.NOT_FOUND));
     }
 }

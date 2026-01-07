@@ -46,8 +46,8 @@ public class ExperienceService {
     }
 
     public List<ExperienceResponse> findExperiencesByJobSeekerId(Long jobSeekerId) {
-        JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
-        return jobSeekerProfile.getExperiences().stream().map(experienceDtoMapper).toList();
+        return experienceRepository.findExperiencesByJobSeekerId(jobSeekerId)
+                .stream().map(experienceDtoMapper).toList();
     }
 
     public void deleteExperience(Long id) {
@@ -64,10 +64,7 @@ public class ExperienceService {
     }
 
     public ExperienceResponse findExperienceById(Long jobSeekerId, Long experienceId) {
-        JobSeekerProfile jobSeekerProfile = jobSeekerProfileService.findJobSeekerProfileByJobSeekerId(jobSeekerId);
-        return jobSeekerProfile.getExperiences().stream()
-                .filter(exp -> exp.getId().equals(experienceId))
-                .findFirst().map(experienceDtoMapper)
+        return experienceRepository.findById(experienceId).map(experienceDtoMapper)
                 .orElseThrow(() -> new ApiException("experience not found", HttpStatus.NOT_FOUND));
     }
 }
