@@ -90,8 +90,8 @@ public class JobPostService {
         return new PageResponse<>(searchResult);
     }
 
-    public PageResponse<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery, int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+    public PageResponse<JobPostResponse> findJobPosts(JobPostFilterQuery filterQuery, int page, int size, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         PageRequest pageRequest = PageRequest.of(page, size, sort);
         Page<JobPostResponse> jobPosts = jobPostRepository
                 .findAll(JobPostSpecificationBuilder.filterJobs(filterQuery), pageRequest)

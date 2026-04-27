@@ -27,8 +27,9 @@ public class JobPostController {
     public ResponseEntity<PageResponse<JobPostResponse>>
     findJobPosts(@RequestParam(value = "page", defaultValue = "0") int page,
                  @RequestParam(value = "size", defaultValue = "10") int size,
+                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
                  JobPostFilterQuery filterQuery) {
-        PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery, page, size);
+        PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPosts(filterQuery, page, size, sortBy);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 
