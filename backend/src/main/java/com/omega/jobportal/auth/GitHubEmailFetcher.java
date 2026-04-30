@@ -12,6 +12,10 @@ public record GitHubEmailFetcher(RestClient restClient) {
     private static final String EMAILS_URL = "https://api.github.com/user/emails";
     private static final String BEARER_PREFIX = "Bearer ";
 
+    private record GithubEmail(String email,
+                               Boolean primary) {
+    }
+
     public String fetchPrimaryEmailAddress(String token) {
         List<GithubEmail> emailVmList = restClient
                 .get()
@@ -31,9 +35,5 @@ public record GitHubEmailFetcher(RestClient restClient) {
                 .findFirst()
                 .map(GithubEmail::email)
                 .orElse(null);
-    }
-
-    private record GithubEmail(String email,
-                               Boolean primary) {
     }
 }

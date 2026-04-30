@@ -1,5 +1,6 @@
 package com.omega.jobportal.config;
 
+import com.omega.jobportal.auth.CustomAuthorizationRequestRepository;
 import com.omega.jobportal.auth.CustomOauth2UserService;
 import com.omega.jobportal.auth.GlobalAuthenticationEntryPoint;
 import com.omega.jobportal.auth.Oauth2LoginSuccessHandler;
@@ -43,11 +44,13 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
+    private final CustomAuthorizationRequestRepository requestRepository;
 
     private final String[] AUTH_ROUTES = new String[]{
             "/api/v1/auth/**",
             "/oauth2/authorization/**",
             "/login/**",
+            "/login/oauth2/**"
     };
 
     private final String[] WHITE_LIST = new String[]{
@@ -83,6 +86,9 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable);
         http.oauth2Login(oauth2 -> oauth2
+                .authorizationEndpoint(endpoint ->
+                        endpoint.authorizationRequestRepository(requestRepository)
+                )
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
                 .successHandler(oauth2LoginSuccessHandler)
         );

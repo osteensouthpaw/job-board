@@ -58,6 +58,7 @@ public class AppUser {
 
     public AppUser(String name, String email) {
         separateNames(name);
+        this.userType = UserType.PENDING;
         this.email = email;
     }
 

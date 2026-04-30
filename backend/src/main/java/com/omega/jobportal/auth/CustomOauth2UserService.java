@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -45,33 +45,32 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("unable to fetch email");
 
         updatedAttributes.put(EMAIL_KEY, emailAddress);
-        createUserAndConnectAccount(providerId, provider, updatedAttributes);
+        AtomicReference<UserType> userType = new AtomicReference<>(UserType.PENDING);
+
+        userRepository.findUserByEmail(oAuth2User.getAttribute("email"))
+                .ifPresentOrElse((appUser) -> {
+                    log.error(appUser.getUserType().name());
+                    userType.set(appUser.getUserType());
+                    if (userConnectedAccountRepository.findByProviderIdAndProvider(providerId, provider).isEmpty())
+                        connectAccount(providerId, provider, appUser);
+                }, () -> {
+                    AppUser appUser = createUser(updatedAttributes);
+                    connectAccount(providerId, provider, appUser);
+                });
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(UserType.PENDING.name())),
+                Collections.singleton(new SimpleGrantedAuthority(userType.get().name())),
                 updatedAttributes,
                 NAME_ATTRIBUTE
         );
     }
 
-    public void createUser(String providerId, String provider, Map<String, Object> attributes) {
+    private AppUser createUser(Map<String, Object> attributes) {
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
         AppUser appUser = new AppUser(name, email);
         appUser = userRepository.save(appUser);
-        connectAccount(providerId, provider, appUser);
-    }
-
-    private void createUserAndConnectAccount(String providerId, String provider, Map<String, Object> attributes) {
-        String email = (String) attributes.get("email");
-        Optional<UserConnectedAccount> userConnectedAccount = userConnectedAccountRepository
-                .findByProviderIdAndProvider(providerId, provider);
-        if (userConnectedAccount.isEmpty()) {
-            userRepository.findUserByEmail(email)
-                    .ifPresentOrElse(user -> connectAccount(providerId, provider, user),
-                            () -> createUser(providerId, provider, attributes)
-                    );
-        }
+        return appUser;
     }
 
     private String extractPrimaryEmailAddress(OAuth2User oauth2User, String token) {
