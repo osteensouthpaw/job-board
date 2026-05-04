@@ -9,6 +9,11 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 
   security:
     oauth2:
@@ -22,6 +27,8 @@ logging:
   level:
     web: debug
     org:
+      hibernate.SQL: DEBUG
+      hibernate.orm.jdbc.bind: TRACE
       springframework:
         security: debug
 
@@ -29,4 +36,3 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
-
