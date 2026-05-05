@@ -50,7 +50,7 @@ public class JobPost {
     @FullTextField
     private String jobTitle;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     @FullTextField
     private String description;
 
