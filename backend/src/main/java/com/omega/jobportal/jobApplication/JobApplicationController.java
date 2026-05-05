@@ -25,14 +25,7 @@ public class JobApplicationController {
         var applications = jobApplicationService.findAllApplicationsByApplicant(page, size);
         return ResponseEntity.ok(applications);
     }
-
-    @GetMapping("/{jobPostId}/applicants/{applicantId}")
-    public ResponseEntity<JobApplicationResponse>
-    findJobApplicationByJobPostIdAndApplicantId(@PathVariable Long jobPostId, @PathVariable Long applicantId) {
-        JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndApplicantId(jobPostId, applicantId);
-        return ResponseEntity.ok(jobApplication);
-    }
-
+    
     @PostMapping
     @PreAuthorize("hasRole('JOB_SEEKER')")
     public ResponseEntity<JobApplicationResponse> createJobApplication(@RequestBody @Valid JobApplicationRequest request) {

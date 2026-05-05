@@ -1,5 +1,7 @@
 package com.omega.jobportal.jobPost;
 
+import com.omega.jobportal.jobApplication.JobApplicationService;
+import com.omega.jobportal.jobApplication.data.JobApplicationResponse;
 import com.omega.jobportal.jobPost.data.JobPostFilterQuery;
 import com.omega.jobportal.jobPost.data.JobPostRequest;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
@@ -9,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class JobPostController {
     private final JobPostService jobPostService;
+    private final JobApplicationService jobApplicationService;
 
     @PostMapping
     public ResponseEntity<JobPostResponse> createJobPost(@RequestBody @Valid JobPostRequest request) {
@@ -38,13 +42,6 @@ public class JobPostController {
                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                                                     @RequestParam(value = "size", defaultValue = "20") int size) {
         PageResponse<JobPostResponse> jobPosts = jobPostService.searchJobPosts(searchQuery, page, size);
-        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
-    }
-
-    public ResponseEntity<PageResponse<JobPostResponse>>
-    findJobPostsByRecruiterId(@RequestParam(value = "page", defaultValue = "0") int page,
-                              @RequestParam(value = "size", defaultValue = "20") int size) {
-        PageResponse<JobPostResponse> jobPosts = jobPostService.findJobPostsByRecruiterId(page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
     }
 
@@ -84,5 +81,22 @@ public class JobPostController {
                                                                            @RequestParam(value = "size", defaultValue = "20") int size) {
         PageResponse<JobPostResponse> likedJobPosts = jobPostService.findLikedJobPosts(page, size);
         return ResponseEntity.ok(likedJobPosts);
+    }
+
+    @GetMapping("{id}/applications")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<PageResponse<JobApplicationResponse>>
+    jobApplicationsByPostId(@PathVariable Long id,
+                            @RequestParam(value = "page", defaultValue = "0") int page,
+                            @RequestParam(value = "size", defaultValue = "10") int size) {
+        var applications = jobApplicationService.findJobPostApplicationsByJobPostId(id, page, size);
+        return ResponseEntity.ok(applications);
+    }
+
+    @GetMapping("/{jobPostId}/applicants/{applicantId}")
+    public ResponseEntity<JobApplicationResponse>
+    findJobApplicationByJobPostIdAndApplicantId(@PathVariable Long jobPostId, @PathVariable Long applicantId) {
+        JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndApplicantId(jobPostId, applicantId);
+        return ResponseEntity.ok(jobApplication);
     }
 }

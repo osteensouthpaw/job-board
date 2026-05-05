@@ -2,6 +2,8 @@ package com.omega.jobportal.company;
 
 import com.omega.jobportal.company.data.OrganizationRegistrationRequest;
 import com.omega.jobportal.company.data.OrganizationResponse;
+import com.omega.jobportal.jobPost.data.JobPostResponse;
+import com.omega.jobportal.utils.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/recruiters/organizations")
+@RequestMapping("api/v1/organizations")
 @RequiredArgsConstructor
 public class OrganizationController {
     private final OrganizationService organizationService;
@@ -26,4 +28,12 @@ public class OrganizationController {
         return new ResponseEntity<>(organizationResponse, HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<PageResponse<JobPostResponse>>
+    findJobPostsByOrganizationId(@PathVariable Long id,
+                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "20") int size) {
+        PageResponse<JobPostResponse> jobPosts = organizationService.findJobPostsByOrganizationId(id, page, size);
+        return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
 }

@@ -69,7 +69,7 @@ public class SecurityConfig {
     };
 
     private final String[] RECRUITER_ROUTES = new String[]{
-            "/api/v1/recruiters/organizations",
+            "/api/v1/organizations",
             "/api/v1/job-applications/reject",
             "/api/v1/job-applications/accept",
     };

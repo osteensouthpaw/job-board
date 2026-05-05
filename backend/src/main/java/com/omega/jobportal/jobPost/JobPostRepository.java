@@ -13,4 +13,8 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long>, JpaSpec
 
     @Query("SELECT jp FROM JobPost jp JOIN jp.likedBy u WHERE u.id = :userId")
     Page<JobPost> findLikedJobPostsByUserId(Long userId, Pageable pageable);
+
+    @Query("SELECT jb FROM JobPost jb WHERE jb.organization.id = :organizationId")
+    Page<JobPost> findJobPostsByOrganizationId(Long organizationId, Pageable pageable);
+
 }
