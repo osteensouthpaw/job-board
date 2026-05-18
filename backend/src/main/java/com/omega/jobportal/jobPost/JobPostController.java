@@ -99,4 +99,10 @@ public class JobPostController {
         JobApplicationResponse jobApplication = jobApplicationService.findJobApplicationByJobPostIdAndApplicantId(jobPostId, applicantId);
         return ResponseEntity.ok(jobApplication);
     }
+
+    @GetMapping("/open")
+    public ResponseEntity<Integer> findOpenJobPosts() {
+        Integer openJobPosts = jobPostService.findOpenJobPosts();
+        return ResponseEntity.ok(openJobPosts);
+    }
 }

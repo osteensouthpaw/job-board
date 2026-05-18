@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -127,5 +128,18 @@ public class JobPostService {
         JobPost jobPost = findJobPostById(jobPostId);
         return jobPost.getLikedBy().stream()
                 .anyMatch(user -> Objects.equals(user.getId(), loggedInUser.getId()));
+    }
+
+    public PageResponse<JobPostResponse> findJobPostsByRecruiterId(int page, int size, String sortBy) {
+        AppUser user = authService.getSession();
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<JobPostResponse> jobPosts = jobPostRepository.findJobPostsByRecruiterId(user.getId(), pageRequest)
+                .map(jobPostDtoMapper);
+        return new PageResponse<>(jobPosts);
+    }
+
+    public Integer findOpenJobPosts() {
+        return jobPostRepository.findTotalOpenJobPosts(LocalDateTime.now());
     }
 }
