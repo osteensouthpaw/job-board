@@ -106,14 +106,6 @@
             <artifactId>hibernate-search-mapper-orm</artifactId>
             <version>7.2.2.Final</version>
         </dependency>
-
-        <!-- Source: https://mvnrepository.com/artifact/p6spy/p6spy -->
-        <dependency>
-            <groupId>p6spy</groupId>
-            <artifactId>p6spy</artifactId>
-            <version>3.9.1</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
