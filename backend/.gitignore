@@ -39,3 +39,4 @@ application-prod.yml
 application-test.yml
 
 .jetclient
+.env

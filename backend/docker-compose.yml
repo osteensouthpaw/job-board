@@ -1,0 +1,7 @@
+services:
+  backend:
+    image: osteensouthpaw/job-board-backend:1.3
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
