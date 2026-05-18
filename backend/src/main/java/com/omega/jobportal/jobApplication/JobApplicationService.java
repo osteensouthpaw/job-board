@@ -64,10 +64,12 @@ public class JobApplicationService {
                 });
     }
 
-    public PageResponse<JobApplicationResponse> findAllApplications(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+    @Transactional
+    public PageResponse<JobApplicationResponse> findAllApplicationsForRecruiter(int page, int size, String sortBy) {
+        AppUser appUser = authenticationService.getSession();
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-        Page<JobApplicationResponse> jobApplications = jobApplicationRepository.findAll(pageRequest)
+        Page<JobApplicationResponse> jobApplications = jobApplicationRepository.findJobApplicationsForRecruiter(appUser.getId(), pageRequest)
                 .map(jobApplicationDtoMapper);
         return new PageResponse<>(jobApplications);
     }
@@ -83,6 +85,7 @@ public class JobApplicationService {
         return new PageResponse<>(jobApplications);
     }
 
+    @Transactional
     public PageResponse<JobApplicationResponse> findJobPostApplicationsByJobPostId(Long jobPostId, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "applicationDate");
         PageRequest pageRequest = PageRequest.of(page, size, sort);
