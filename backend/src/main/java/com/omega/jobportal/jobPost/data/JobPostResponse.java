@@ -24,6 +24,7 @@ public record JobPostResponse(
         int totalApplications,
         int totalLikes,
         LocalDateTime applicationDeadline,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        int maxApplications
 ) {
 }

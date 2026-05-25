@@ -13,7 +13,7 @@ public record JobPostRequest(
         @NotBlank
         String jobTitle,
 
-        @Size(min = 10, max = 2000, message = "The length must be between 10 - 2000")
+        @Size(min = 10, max = 10_000, message = "The length must be between 10 - 10,000")
         @NotBlank(message = "jobDescription is required")
         String jobDescription,
 
@@ -34,6 +34,9 @@ public record JobPostRequest(
 
         @NotNull
         @Future
-        LocalDateTime applicationDeadline
+        LocalDateTime applicationDeadline,
+
+        @Positive
+        int maxApplications
 ) {
 }

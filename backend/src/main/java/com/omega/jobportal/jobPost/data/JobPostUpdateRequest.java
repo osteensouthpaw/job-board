@@ -16,7 +16,7 @@ public record JobPostUpdateRequest(
         @Size(min = 10, max = 1000, message = "The length must be between 3 - 100")
         @NotBlank(message = "jobDescription is required")
         String jobDescription,
-        
+
         @Positive
         BigDecimal salary,
 
@@ -34,6 +34,9 @@ public record JobPostUpdateRequest(
 
         @NotNull
         @Future
-        LocalDateTime applicationDeadline
+        LocalDateTime applicationDeadline,
+
+        @Positive
+        int maxApplications
 ) {
 }

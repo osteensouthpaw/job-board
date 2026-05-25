@@ -35,7 +35,8 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
                 jobPost.getJobApplications().size(),
                 jobPost.getLikedBy().size(),
                 jobPost.getApplicationDeadline(),
-                jobPost.getCreatedAt()
+                jobPost.getCreatedAt(),
+                jobPost.getMaxApplications()
         );
     }
 
@@ -48,6 +49,7 @@ public class JobPostDtoMapper implements Function<JobPost, JobPostResponse> {
         jobPost.setJobType(request.jobType());
         jobPost.setWorkMode(request.workMode());
         jobPost.setLocation(request.location());
+        jobPost.setMaxApplications(request.maxApplications());
         return jobPost;
     }
 }

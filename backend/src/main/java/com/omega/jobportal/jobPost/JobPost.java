@@ -75,6 +75,9 @@ public class JobPost {
     )
     private List<JobApplication> jobApplications = new ArrayList<>();
 
+    @Column(name = "max_applications")
+    private int maxApplications;
+
     @ManyToMany
     @JoinTable(
             name = "job_post_likes",
@@ -101,5 +104,6 @@ public class JobPost {
         this.workMode = request.workMode();
         this.experienceLevel = request.experienceLevel();
         this.applicationDeadline = request.applicationDeadline();
+        this.maxApplications = request.maxApplications();
     }
 }

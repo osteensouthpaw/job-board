@@ -36,8 +36,9 @@ public class JobApplicationService {
         AppUser applicant = validatedApplicant();
         var jobPost = jobPostService.findJobPostById(request.jobPostId());
         boolean isApplicationOpen = LocalDateTime.now().isBefore(jobPost.getApplicationDeadline());
+        boolean isFull = jobPost.getJobApplications().size() == jobPost.getMaxApplications();
 
-        if (!isApplicationOpen)
+        if (!isApplicationOpen || isFull)
             throw new ApiException("job application closed, applications no longer accepted", HttpStatus.BAD_REQUEST);
         JobApplicationKey jobApplicationKey = new JobApplicationKey(applicant.getId(), jobPost.getId());
 
