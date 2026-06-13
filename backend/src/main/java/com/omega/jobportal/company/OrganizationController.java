@@ -1,5 +1,7 @@
 package com.omega.jobportal.company;
 
+import com.omega.jobportal.company.businessStream.BusinessStream;
+import com.omega.jobportal.company.businessStream.BusinessStreamService;
 import com.omega.jobportal.company.data.OrganizationRegistrationRequest;
 import com.omega.jobportal.company.data.OrganizationResponse;
 import com.omega.jobportal.jobPost.data.JobPostResponse;
@@ -10,11 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/organizations")
 @RequiredArgsConstructor
 public class OrganizationController {
     private final OrganizationService organizationService;
+    private final BusinessStreamService businessStreamService;
 
     @PostMapping
     public ResponseEntity<OrganizationResponse> registerOrganization(@RequestBody @Valid OrganizationRegistrationRequest request) {
@@ -35,5 +40,10 @@ public class OrganizationController {
                                  @RequestParam(value = "size", defaultValue = "20") int size) {
         PageResponse<JobPostResponse> jobPosts = organizationService.findJobPostsByOrganizationId(id, page, size);
         return new ResponseEntity<>(jobPosts, HttpStatus.OK);
+    }
+
+    @GetMapping("/business-streams")
+    public List<BusinessStream> businessStreams() {
+        return businessStreamService.findAll();
     }
 }
