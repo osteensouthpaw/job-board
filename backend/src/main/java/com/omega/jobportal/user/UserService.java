@@ -24,8 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.omega.jobportal.constants.Constants.NEW_USER_ACCOUNT_VERIFICATION;
-import static com.omega.jobportal.constants.Constants.RESET_PASSWORD;
+import static com.omega.jobportal.constants.Constants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
     private final EmailService emailService;
+    private final EmailUtils emailUtils;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final AuthenticationService authenticationService;
     private final UserConnectedAccountRepository userConnectedAccountRepository;
@@ -76,7 +76,7 @@ public class UserService {
 
     private void sendVerificationEmail(AppUser user) {
         String verificationCode = verificationCodeService.createVerificationCode(user);
-        String message = EmailUtils.getAccountVerificationEmailMessage(user.getFirstName(), verificationCode);
+        String message = emailUtils.getAccountVerificationEmailMessage(user.getFirstName(), verificationCode);
         emailService.sendSimpleMailMessage(user.getEmail(), message, NEW_USER_ACCOUNT_VERIFICATION);
     }
 
@@ -96,7 +96,7 @@ public class UserService {
         AppUser user = findUserByEmail(email);
         var passwordResetToken = new PasswordResetToken(user);
         var resetToken = passwordResetTokenRepository.save(passwordResetToken);
-        String message = EmailUtils.getResetPasswordEmailMessage(user.getFirstName(), resetToken.getToken());
+        String message = emailUtils.getResetPasswordEmailMessage(user.getFirstName(), resetToken.getToken());
         emailService.sendSimpleMailMessage(user.getEmail(), message, RESET_PASSWORD);
     }
 
@@ -106,17 +106,19 @@ public class UserService {
         passwordResetTokenRepository.findByToken(request.passwordToken())
                 .ifPresentOrElse(token -> {
                             if (token.isExpired())
-                                throw new ApiException("Password reset link is expired", HttpStatus.BAD_REQUEST);
+                                throw new ApiException("Password reset code is expired", HttpStatus.BAD_REQUEST);
                             AppUser appUser = token.getAppUser();
                             appUser.setPassword(passwordEncoder.encode(request.password()));
                             userRepository.save(appUser);
-                            //todo: send confirmation email to user;
+                            String message = emailUtils.getPasswordChangedConfirmationEmailMessage(appUser.getFirstName());
+                            emailService.sendSimpleMailMessage(appUser.getEmail(), message, PASSWORD_CHANGED_CONFIRMATION);
                         },
                         () -> {
                             throw new ApiException("password reset token not found", HttpStatus.NOT_FOUND);
                         });
     }
 
+    @Transactional
     public void updatePassword(UpdateUserPasswordRequest request) {
         AppUser appUser = authenticationService.getSession();
         isPasswordMatch(request.password(), request.confirmPassword());
@@ -130,6 +132,8 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(request.password());
         appUser.setPassword(hashedPassword);
         userRepository.save(appUser);
+        String message = emailUtils.getPasswordChangedConfirmationEmailMessage(appUser.getFirstName());
+        emailService.sendSimpleMailMessage(appUser.getEmail(), message, PASSWORD_CHANGED_CONFIRMATION);
     }
 
     public AppUser findUserByEmail(String email) {

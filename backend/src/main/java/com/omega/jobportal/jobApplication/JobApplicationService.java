@@ -1,6 +1,8 @@
 package com.omega.jobportal.jobApplication;
 
 import com.omega.jobportal.auth.AuthenticationService;
+import com.omega.jobportal.email.EmailService;
+import com.omega.jobportal.email.EmailUtils;
 import com.omega.jobportal.exception.ApiException;
 import com.omega.jobportal.jobApplication.data.JobApplicationRequest;
 import com.omega.jobportal.jobApplication.data.JobApplicationResponse;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.omega.jobportal.constants.Constants.*;
+
 @Service
 @RequiredArgsConstructor
 public class JobApplicationService {
@@ -30,6 +34,8 @@ public class JobApplicationService {
     private final JobPostService jobPostService;
     private final JobApplicationDtoMapper jobApplicationDtoMapper;
     private final UserService userService;
+    private final EmailService emailService;
+    private final EmailUtils emailUtils;
 
     @Transactional
     public JobApplicationResponse createJobApplication(JobApplicationRequest request) {
@@ -50,7 +56,12 @@ public class JobApplicationService {
                     jobApplication.setJobPost(jobPost);
                     jobApplication.setCoverLetter(request.coverLetter());
                     JobApplication savedJobApplication = jobApplicationRepository.save(jobApplication);
-                    //todo: send confirmation email;
+                    String message = emailUtils.getJobApplicationConfirmationEmailMessage(
+                            jobApplication.getApplicant().getFirstName(),
+                            jobApplication.getJobPost().getJobTitle(),
+                            jobPost.getOrganization().getOrganizationName(),
+                            savedJobApplication.getApplicationDate());
+                    emailService.sendSimpleMailMessage(savedJobApplication.getApplicant().getEmail(), message, JOB_APPLICATION_CONFIRMATION);
                     return jobApplicationDtoMapper.apply(savedJobApplication);
                 });
     }
@@ -113,7 +124,11 @@ public class JobApplicationService {
                 .ifPresentOrElse(application -> {
                     application.setApplicationStatus(ApplicationStatus.ACCEPTED);
                     jobApplicationRepository.save(application);
-                    //todo: send confirmation email
+                    String message = emailUtils.getApplicationAcceptanceEmailMessage(
+                            applicant.getFirstName(),
+                            jobPost.getJobTitle(),
+                            jobPost.getOrganization().getOrganizationName());
+                    emailService.sendSimpleMailMessage(applicant.getEmail(), message, APPLICATION_ACCEPTED);
                 }, () -> {
                     throw new ApiException("Job application not found", HttpStatus.NOT_FOUND);
                 });
@@ -127,7 +142,11 @@ public class JobApplicationService {
                 .ifPresentOrElse(application -> {
                     application.setApplicationStatus(ApplicationStatus.REJECTED);
                     jobApplicationRepository.save(application);
-                    //todo: send confirmation email
+                    String message = emailUtils.getApplicationRejectionEmailMessage(
+                            applicant.getFirstName(),
+                            jobPost.getJobTitle(),
+                            jobPost.getOrganization().getOrganizationName());
+                    emailService.sendSimpleMailMessage(applicant.getEmail(), message, APPLICATION_REJECTED);
                 }, () -> {
                     throw new ApiException("Job application not found", HttpStatus.NOT_FOUND);
                 });
