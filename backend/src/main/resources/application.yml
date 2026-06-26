@@ -38,10 +38,13 @@ springdoc:
     path: /swagger-ui.html
 
 management:
+  metrics:
+    tags:
+      application: jobMega
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, beans, configprops, heapdump, httpexchanges, loggers, mappings
+        include: health, info, metrics, beans, configprops, heapdump, httpexchanges, loggers, mappings, prometheus
   endpoint:
     health:
       show-details: always
@@ -59,6 +62,9 @@ management:
       enabled: true
     os:
       enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
 
 info:
   app:
