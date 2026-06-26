@@ -40,3 +40,17 @@ application-test.yml
 
 .jetclient
 .env
+
+# Grafana runtime data
+docker/grafana/grafana.db
+docker/grafana/plugins/
+
+# IDE files
+.idea/
+
+#  personal notes
+.todo/
+
+# Locene search engine
+JobPost/
+JobSeekerProfile/

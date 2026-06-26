@@ -60,8 +60,8 @@ public class JobApplicationService {
                             jobApplication.getApplicant().getFirstName(),
                             jobApplication.getJobPost().getJobTitle(),
                             jobPost.getOrganization().getOrganizationName(),
-                            jobApplication.getApplicationDate());
-                    emailService.sendSimpleMailMessage(jobApplication.getApplicant().getEmail(), message, JOB_APPLICATION_CONFIRMATION);
+                            savedJobApplication.getApplicationDate());
+                    emailService.sendSimpleMailMessage(savedJobApplication.getApplicant().getEmail(), message, JOB_APPLICATION_CONFIRMATION);
                     return jobApplicationDtoMapper.apply(savedJobApplication);
                 });
     }

@@ -31,7 +31,7 @@ public class OrganizationService {
 
     public OrganizationResponse registerOrganization(OrganizationRegistrationRequest request) {
         AppUser loggedInUser = authenticationService.getSession();
-        BusinessStream businessStream = businessStreamService.findById(request.businessStream());
+        BusinessStream businessStream = businessStreamService.findById(request.businessStreamId());
         Organization organization = new Organization(request, businessStream, loggedInUser);
         return organizationDtoMapper.apply(organization);
     }
@@ -43,7 +43,7 @@ public class OrganizationService {
 
     public OrganizationResponse updateOrganization(OrganizationRegistrationRequest request, Long companyId) {
         Organization organization = findOrganizationById(companyId);
-        BusinessStream businessStream = businessStreamService.findById(request.businessStream());
+        BusinessStream businessStream = businessStreamService.findById(request.businessStreamId());
         organization = organizationDtoMapper.apply(request, organization, businessStream);
         return organizationDtoMapper.apply(organizationRepository.save(organization));
     }

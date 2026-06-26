@@ -61,7 +61,8 @@ public class SecurityConfig {
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/actuator/**"
     };
 
     private final String[] JOB_SEEKER_ROUTES = new String[]{

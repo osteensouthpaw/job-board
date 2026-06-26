@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 
@@ -17,7 +18,7 @@ public record OrganizationRegistrationRequest(
         String description,
 
         @NotNull
-        Long businessStream,
+        Long businessStreamId,
 
         @PastOrPresent
         LocalDate establishmentDate,
@@ -25,6 +26,7 @@ public record OrganizationRegistrationRequest(
         @NotBlank
         String companyLocation,
 
+        @URL
         String websiteUrl
 ) {
 }
